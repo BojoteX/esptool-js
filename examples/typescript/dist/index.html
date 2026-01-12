@@ -1,0 +1,104 @@
+<!DOCTYPE html><script type=importmap>{"imports":{"3Q1lt":"./stub_flasher_32s3.12e70a17.js","3SJw9":"./stub_flasher_32p4.90818dd8.js","42D6w":"./stub_flasher_32h2.d3ff7661.js","45nfY":"./esp32.79776c5a.js","49xYu":"./stub_flasher_8266.69191a58.js","5Zo7B":"./esp32s2.b5ee2d9d.js","6iKEr":"./esp32c3.b87e0e2c.js","6liaV":"./stub_flasher_32p4rc1.22fbf1a9.js","7gOE2":"./esp32h2.8f31c5de.js","9n0Qt":"./stub_flasher_32c2.55567518.js","9naEi":"./stub_flasher_32c3.27604e70.js","aLxy3":"./esp32p4.1b4207b7.js","abhNo":"./esp32s3.d5795501.js","dgQlv":"./esp32c6.2a28fee0.js","gQr70":"./stub_flasher_32c6.d2964261.js","h3PAu":"./stub_flasher_32.38cd51a1.js","hVTyT":"./stub_flasher_32c61.76c5e425.js","kDsVX":"./esp32c2.be9a3d95.js","kQl6f":"./stub_flasher_32c5.f4349b2c.js","kTDAm":"./esp32c61.98b9b9e9.js","krfkc":"./esp32c5.e6bca74f.js","l2scW":"./stub_flasher_32s2.54df1115.js"}}</script><meta charset=utf-8><title>ESP Tool</title><link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css><link href="https://fonts.googleapis.com/css?family=Orbitron" rel=stylesheet><link rel=icon href=favicon.ee2246ac.ico><script src=https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js></script><script src=https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js></script><script src=https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js></script><script src=https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js></script><body>
+        <h1 align=center><p><img src=esp-logo.089ce671.png width=42 height=42 style=vertical-align:middle crossorigin> ESP Tool</h1>
+        <h4 align=center>A Serial Flasher utility for Espressif chips</h4>
+        <div id=safariErr style=display:none><p align=center style=color:red>This tool is not supported on Safari browser!</p>
+        </div>
+        <div align=center>
+            <a class="btn btn-info" href=./docs/index.html>View the API Documentation</a>
+
+            <div class="form-check form-check-inline">
+                <input class=form-check-input type=checkbox id=debugLogging value>
+                <label class=form-check-label for=debugLogging>Show Debug log</label>
+            </div>
+          </div>
+        <div class=container id=main>
+            <hr>
+            <div id=program>
+                <h3> Program </h3>
+                <label for=baudrates id=lblBaudrate>Baudrate:</label>
+                <label style=display:none id=lblConnTo>Connected to device: </label>
+                <select name=baudrates id=baudrates>
+                    <option value=921600>921600</option>
+                    <option value=460800>460800</option>
+                    <option value=230400>230400</option>
+                    <option value=115200>115200</option>
+                </select>
+
+                <br><br>
+
+                <input class="btn btn-info btn-sm" type=button id=connectButton value=Connect>
+                <input class="btn btn-info btn-sm" type=button id=copyTraceButton value="Copy Trace">
+                <input class="btn btn-sm btn-warning" type=button id=disconnectButton value=Disconnect>
+                <input class="btn btn-danger btn-sm" type=button id=eraseButton value="Erase Flash">
+                <br>
+
+                <div class="alert alert-danger alert-dismissible" id=alertDiv style=margin-top:10px;display:none>
+                    <a href=# class=close aria-label=close onclick="$('.alert').hide()">×</a>
+                    <span id=alertmsg></span>
+                </div>
+
+                <div id=files>
+                    <table class="table table-striped" id=fileTable>
+                        <thead class=thead-light>
+                            <tr>
+                                <th>Flash Address</th>
+                                <th>File</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id=tableBody>
+                        </tbody>
+                    </table>
+                    <input class="btn btn-info btn-sm" type=button id=addFile value="Add File">
+                    <br><br>
+                    <label for=flashMode id=lblFlashMode>Flash Mode:</label>
+                    <select name=flashMode id=flashMode>
+                        <option value=keep selected>keep</option>
+                        <option value=dio>dio</option>
+                        <option value=qio>qio</option>
+                        <option value=dout>dout</option>
+                        <option value=qout>qout</option>
+                    </select>
+                    <br><br>
+                    <label for=flashFreq id=lblFlashFreq>Flash Frequency:</label>
+                    <select name=flashFreq id=flashFreq>
+                        <option value=keep>keep</option>
+                    </select>
+                    <br><br>
+                    <label for=flashSize id=lblFlashSize>Flash Size:</label>
+                    <select name=flashSize id=flashSize>
+                        <option value=detect>detect</option>
+                        <option value=keep>keep</option>
+                    </select>
+                    <br><br>
+                    <input class="btn btn-info btn-sm" type=button id=programButton value=Program>
+                </div>
+                <output id=list></output>
+                <hr>
+            </div>
+            <div id=console>
+                <h3>Console </h3>
+                <label style=display:none id=lblConsoleFor>Connected to device: </label>
+                <label for=consoleBaudrates id=lblConsoleBaudrate>Baudrate:</label>
+                <select name=consoleBaudrates id=consoleBaudrates>
+                    <option value=115200>115200</option>
+                    <option value=74880>74880</option>
+                </select>
+                <label for=reconnectDelay id=lblReconnectDelay>Reconnect Delay (ms):</label>
+                <input type=number id=reconnectDelay name=reconnectDelay value=1000 min=100 max=10000 step=100>
+                <label for=maxRetries id=lblMaxRetries>Max Retries:</label>
+                <input type=number id=maxRetries name=maxRetries value=5 min=1 max=20 step=1>
+
+                <br><br>
+
+                <input class="btn btn-info" type=button id=consoleStartButton value=Start>
+                <input class="btn btn-info" type=button id=consoleStopButton value=Stop>
+                <input class="btn btn-info" type=button id=resetButton value=Reset>
+                <hr>
+            </div>
+            <div id=terminal></div>
+        </div>
+        <script src=typescript.b3e1d96b.js type=module></script>
+        <script>var isSafari=/constructor/i.test(window.HTMLElement)||function(i){return"[object SafariRemoteNotification]"===i.toString()}(!window.safari||"u">typeof safari&&window.safari.pushNotification);isSafari&&(document.getElementById("safariErr").style.display="inline",document.getElementById("main").style.display="none");</script>
+    
+
