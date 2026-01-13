@@ -543,6 +543,7 @@ footer a:hover {
   align-items: center;
   gap: .5rem;
   margin-top: 1rem;
+  margin-bottom: 1.5rem;
   display: flex;
 }
 
@@ -557,6 +558,80 @@ footer a:hover {
   color: var(--text-tertiary);
   cursor: pointer;
   font-size: .75rem;
+}
+
+.logo-link {
+  color: inherit;
+  transition: opacity var(--transition-fast);
+  text-decoration: none;
+}
+
+.logo-link:hover {
+  opacity: .8;
+}
+
+.modal-overlay {
+  z-index: 1000;
+  background: #000c;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent-primary);
+  text-align: center;
+  border-radius: 8px;
+  max-width: 400px;
+  padding: 2rem 3rem;
+  animation: .3s modalSlideIn;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-icon {
+  background: var(--accent-primary);
+  width: 60px;
+  height: 60px;
+  color: var(--bg-primary);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+}
+
+.modal-content h3 {
+  font-family: var(--font-display);
+  color: var(--accent-primary);
+  margin-bottom: .5rem;
+}
+
+.modal-content p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
 }
 
 @media (width <= 768px) {
@@ -600,13 +675,15 @@ footer a:hover {
 <body>
     <header>
         <div class="header-content">
-            <div class="logo-section">
-                <img src="https://raw.githubusercontent.com/BojoteX/CockpitOS/main/CockpitOS_logo_small.png" alt="CockpitOS Logo" crossorigin="">
-                <div class="title-group">
-                    <h1><span>ESP Tool</span></h1>
-                    <p>Web Serial Firmware Flasher</p>
+            <a href="#" class="logo-link" id="logoLink">
+                <div class="logo-section">
+                    <img src="https://raw.githubusercontent.com/BojoteX/CockpitOS/main/CockpitOS_logo_small.png" alt="CockpitOS Logo" crossorigin="">
+                    <div class="title-group">
+                        <h1><span>ESP Tool</span></h1>
+                        <p>Web Serial Firmware Flasher</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </header>
 
@@ -659,7 +736,7 @@ footer a:hover {
                     </div>
 
                     <div class="file-select-area">
-                        <label>Select firmware file (CockpitOS.ino.merged.bin)</label>
+                        <label>Select firmware file (.merged.bin for full flash, .ino.bin for app only)</label>
                         <input type="file" id="firmwareFile" accept=".bin">
                     </div>
 
@@ -693,8 +770,18 @@ footer a:hover {
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">✓</div>
+            <h3>Upload Complete!</h3>
+            <p>Firmware has been successfully flashed to your device.</p>
+            <button class="btn btn-success" id="modalCloseBtn">OK</button>
+        </div>
+    </div>
+
     <footer>
-        <p>Powered by <a href="https://github.com/espressif/esptool-js" target="_blank">esptool-js</a> | <a href="https://github.com/BojoteX/CockpitOS" target="_blank">CockpitOS</a></p>
+        <p>by <a href="https://github.com/BojoteX/CockpitOS" target="_blank">CockpitOS Project Team</a></p>
     </footer>
 
     <!-- Legacy hidden elements for compatibility -->
@@ -717,7 +804,7 @@ footer a:hover {
         <button id="resetButton"></button>
     </div>
 
-    <script src="typescript.e4226e04.js" type="module"></script>
+    <script src="typescript.9df97dd4.js" type="module"></script>
     <script>// Safari detection
 var isSafari = /constructor/i.test(window.HTMLElement) || function(p) {
     return p.toString() === "[object SafariRemoteNotification]";

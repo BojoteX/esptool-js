@@ -38,9 +38,14 @@ const firmwareFile = document.getElementById("firmwareFile") as HTMLInputElement
 const mainProgress = document.getElementById("mainProgress") as HTMLProgressElement;
 const progressContainer = document.getElementById("progressContainer");
 const copyConsoleButton = document.getElementById("copyConsoleButton") as HTMLButtonElement;
+const logoLink = document.getElementById("logoLink") as HTMLAnchorElement;
+const successModal = document.getElementById("successModal");
+const modalCloseBtn = document.getElementById("modalCloseBtn") as HTMLButtonElement;
 
 // Store console log for copy functionality
 let consoleLog = "";
+// Store selected filename to detect merged vs sketch
+let selectedFilename = "";
 
 // This is a frontend example of Esptool-JS using local bundle file
 // To optimize use a CDN hosted version like
@@ -108,9 +113,11 @@ firmwareFile.addEventListener("change", (evt: Event) => {
 
   if (!file) {
     firmwareData = null;
+    selectedFilename = "";
     return;
   }
 
+  selectedFilename = file.name.toLowerCase();
   const reader = new FileReader();
   reader.onload = (ev: ProgressEvent<FileReader>) => {
     if (ev.target?.result instanceof ArrayBuffer) {
@@ -119,6 +126,17 @@ firmwareFile.addEventListener("change", (evt: Event) => {
   };
   reader.readAsArrayBuffer(file);
 });
+
+// Logo click - reload page to start fresh
+logoLink.onclick = (e) => {
+  e.preventDefault();
+  window.location.reload();
+};
+
+// Modal close button
+modalCloseBtn.onclick = () => {
+  successModal.classList.remove("show");
+};
 
 connectButton.onclick = async () => {
   try {
@@ -190,6 +208,7 @@ function cleanUp() {
   transport = null;
   chip = null;
   firmwareData = null;
+  selectedFilename = "";
 }
 
 disconnectButton.onclick = async () => {
@@ -227,9 +246,14 @@ programButton.onclick = async () => {
   progressContainer.style.display = "block";
   mainProgress.value = 0;
 
+  // Detect address based on filename: merged.bin -> 0x0, otherwise -> 0x10000
+  const isMerged = selectedFilename.includes("merged");
+  const flashAddress = isMerged ? 0x0 : 0x10000;
+  term.writeln(`Flashing ${isMerged ? "merged binary" : "sketch only"} to address 0x${flashAddress.toString(16)}`);
+
   try {
     const flashOptions: FlashOptions = {
-      fileArray: [{ data: firmwareData, address: 0x0 }],
+      fileArray: [{ data: firmwareData, address: flashAddress }],
       flashSize: "keep",
       flashMode: "keep",
       flashFreq: "keep",
@@ -245,12 +269,13 @@ programButton.onclick = async () => {
     };
     await esploader.writeFlash(flashOptions);
     await esploader.after();
+
+    // Show success modal
+    successModal.classList.add("show");
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
     term.writeln(`Error: ${e.message}`);
-  } finally {
-    // Keep progress bar visible to show completion
   }
 };
 

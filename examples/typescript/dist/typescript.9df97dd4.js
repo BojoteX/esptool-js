@@ -8648,8 +8648,13 @@ const $382e02c9bbd5d50b$var$firmwareFile = document.getElementById("firmwareFile
 const $382e02c9bbd5d50b$var$mainProgress = document.getElementById("mainProgress");
 const $382e02c9bbd5d50b$var$progressContainer = document.getElementById("progressContainer");
 const $382e02c9bbd5d50b$var$copyConsoleButton = document.getElementById("copyConsoleButton");
+const $382e02c9bbd5d50b$var$logoLink = document.getElementById("logoLink");
+const $382e02c9bbd5d50b$var$successModal = document.getElementById("successModal");
+const $382e02c9bbd5d50b$var$modalCloseBtn = document.getElementById("modalCloseBtn");
 // Store console log for copy functionality
 let $382e02c9bbd5d50b$var$consoleLog = "";
+// Store selected filename to detect merged vs sketch
+let $382e02c9bbd5d50b$var$selectedFilename = "";
 const $382e02c9bbd5d50b$var$serialLib = !navigator.serial && navigator.usb ? (0, $d2bbb828b377f05f$export$6c2c9a00e27c07e8) : navigator.serial;
 const $382e02c9bbd5d50b$var$term = new Terminal({
     cols: 120,
@@ -8699,14 +8704,25 @@ $382e02c9bbd5d50b$var$firmwareFile.addEventListener("change", (evt)=>{
     const file = target.files?.[0];
     if (!file) {
         $382e02c9bbd5d50b$var$firmwareData = null;
+        $382e02c9bbd5d50b$var$selectedFilename = "";
         return;
     }
+    $382e02c9bbd5d50b$var$selectedFilename = file.name.toLowerCase();
     const reader = new FileReader();
     reader.onload = (ev)=>{
         if (ev.target?.result instanceof ArrayBuffer) $382e02c9bbd5d50b$var$firmwareData = new Uint8Array(ev.target.result);
     };
     reader.readAsArrayBuffer(file);
 });
+// Logo click - reload page to start fresh
+$382e02c9bbd5d50b$var$logoLink.onclick = (e)=>{
+    e.preventDefault();
+    window.location.reload();
+};
+// Modal close button
+$382e02c9bbd5d50b$var$modalCloseBtn.onclick = ()=>{
+    $382e02c9bbd5d50b$var$successModal.classList.remove("show");
+};
 $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
     try {
         if ($382e02c9bbd5d50b$var$device === null) {
@@ -8765,6 +8781,7 @@ $382e02c9bbd5d50b$var$eraseButton.onclick = async ()=>{
     $382e02c9bbd5d50b$var$transport = null;
     $382e02c9bbd5d50b$var$chip = null;
     $382e02c9bbd5d50b$var$firmwareData = null;
+    $382e02c9bbd5d50b$var$selectedFilename = "";
 }
 $382e02c9bbd5d50b$var$disconnectButton.onclick = async ()=>{
     if ($382e02c9bbd5d50b$var$transport) await $382e02c9bbd5d50b$var$transport.disconnect();
@@ -8793,12 +8810,16 @@ $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
     // Show progress bar
     $382e02c9bbd5d50b$var$progressContainer.style.display = "block";
     $382e02c9bbd5d50b$var$mainProgress.value = 0;
+    // Detect address based on filename: merged.bin -> 0x0, otherwise -> 0x10000
+    const isMerged = $382e02c9bbd5d50b$var$selectedFilename.includes("merged");
+    const flashAddress = isMerged ? 0x0 : 0x10000;
+    $382e02c9bbd5d50b$var$term.writeln(`Flashing ${isMerged ? "merged binary" : "sketch only"} to address 0x${flashAddress.toString(16)}`);
     try {
         const flashOptions = {
             fileArray: [
                 {
                     data: $382e02c9bbd5d50b$var$firmwareData,
-                    address: 0x0
+                    address: flashAddress
                 }
             ],
             flashSize: "keep",
@@ -8816,12 +8837,12 @@ $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
         };
         await $382e02c9bbd5d50b$var$esploader.writeFlash(flashOptions);
         await $382e02c9bbd5d50b$var$esploader.after();
+        // Show success modal
+        $382e02c9bbd5d50b$var$successModal.classList.add("show");
     } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
         $382e02c9bbd5d50b$var$term.writeln(`Error: ${e.message}`);
-    } finally{
-    // Keep progress bar visible to show completion
     }
 };
 // Legacy handlers for backwards compatibility (unused in simplified UI)
@@ -8905,4 +8926,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.e4226e04.js.map
+//# sourceMappingURL=typescript.9df97dd4.js.map
