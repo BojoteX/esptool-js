@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@300;400;500;600&amp;family=Barlow:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css">
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/BojoteX/CockpitOS/main/CockpitOS_logo_small.png">
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/BojoteX/CockpitOS/main/Logos/favicon.ico">
 
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
@@ -489,17 +489,21 @@ progress::-moz-progress-bar {
 
 #terminal {
   background: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 #terminal .xterm {
-  padding: .5rem;
+  padding: 0;
 }
 
 #terminal .xterm-viewport {
   border-radius: 4px;
+  overflow-y: auto !important;
+}
+
+#terminal .xterm-screen {
+  padding: .5rem;
 }
 
 .header-actions {
@@ -736,7 +740,7 @@ footer a:hover {
                     </div>
 
                     <div class="file-select-area">
-                        <label>Select firmware file (.merged.bin for full flash, .ino.bin for app only)</label>
+                        <label>Select firmware file</label>
                         <input type="file" id="firmwareFile" accept=".bin">
                     </div>
 
@@ -746,7 +750,7 @@ footer a:hover {
                     </div>
 
                     <div class="button-row">
-                        <button class="btn btn-success" type="button" id="programButton">Program Flash</button>
+                        <button class="btn btn-success" type="button" id="programButton">Upload</button>
                         <button class="btn btn-warning" type="button" id="disconnectButton">Disconnect</button>
                     </div>
                 </div>
