@@ -8836,9 +8836,15 @@ $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
             }
         };
         await $382e02c9bbd5d50b$var$esploader.writeFlash(flashOptions);
-        await $382e02c9bbd5d50b$var$esploader.after();
-        // Show success modal
+        // Show success modal immediately after flash completes
         $382e02c9bbd5d50b$var$successModal.classList.add("show");
+        // Try to reset the device, but don't block on it
+        try {
+            await $382e02c9bbd5d50b$var$esploader.after();
+        } catch (afterErr) {
+            // eslint-disable-next-line no-console
+            console.log("Device reset completed or skipped");
+        }
     } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
@@ -8926,4 +8932,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.9df97dd4.js.map
+//# sourceMappingURL=typescript.620019ad.js.map

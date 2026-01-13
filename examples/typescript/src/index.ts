@@ -268,10 +268,17 @@ programButton.onclick = async () => {
       },
     };
     await esploader.writeFlash(flashOptions);
-    await esploader.after();
 
-    // Show success modal
+    // Show success modal immediately after flash completes
     successModal.classList.add("show");
+
+    // Try to reset the device, but don't block on it
+    try {
+      await esploader.after();
+    } catch (afterErr) {
+      // eslint-disable-next-line no-console
+      console.log("Device reset completed or skipped");
+    }
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
