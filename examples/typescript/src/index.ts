@@ -37,6 +37,10 @@ const terminalContainer = document.getElementById("terminalContainer");
 const firmwareFile = document.getElementById("firmwareFile") as HTMLInputElement;
 const mainProgress = document.getElementById("mainProgress") as HTMLProgressElement;
 const progressContainer = document.getElementById("progressContainer");
+const copyConsoleButton = document.getElementById("copyConsoleButton") as HTMLButtonElement;
+
+// Store console log for copy functionality
+let consoleLog = "";
 
 // This is a frontend example of Esptool-JS using local bundle file
 // To optimize use a CDN hosted version like
@@ -67,13 +71,34 @@ let firmwareData: Uint8Array = null;
 const espLoaderTerminal = {
   clean() {
     term.clear();
+    consoleLog = "";
   },
   writeLine(data) {
     term.writeln(data);
+    consoleLog += data + "\n";
   },
   write(data) {
     term.write(data);
+    consoleLog += data;
   },
+};
+
+// Copy console log to clipboard
+copyConsoleButton.onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(consoleLog);
+    // Visual feedback
+    const originalText = copyConsoleButton.textContent;
+    copyConsoleButton.textContent = "Copied!";
+    copyConsoleButton.classList.add("btn-copied");
+    setTimeout(() => {
+      copyConsoleButton.textContent = originalText;
+      copyConsoleButton.classList.remove("btn-copied");
+    }, 2000);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("Failed to copy:", err);
+  }
 };
 
 // Handle firmware file selection
@@ -171,6 +196,7 @@ disconnectButton.onclick = async () => {
   if (transport) await transport.disconnect();
 
   term.reset();
+  consoleLog = "";
 
   // Reset UI to initial state
   connectSection.style.display = "block";
@@ -334,5 +360,6 @@ consoleStopButton.onclick = async () => {
     await transport.waitForUnlock(1500);
   }
   term.reset();
+  consoleLog = "";
   cleanUp();
 };

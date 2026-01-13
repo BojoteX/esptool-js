@@ -180,6 +180,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 1rem;
         }
 
         .panel-header h2 {
@@ -228,14 +229,57 @@
            ═══════════════════════════════════════════════════════════════════════ */
         .connect-section {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 2rem;
         }
 
-        .connect-section p {
+        .instructions {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .instructions h3 {
             font-family: var(--font-body);
             font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .instructions ol {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .instructions li {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .instructions li strong {
+            color: var(--text-primary);
+        }
+
+        .instructions .tip {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--accent-dim);
+            border-left: 3px solid var(--accent-primary);
+            border-radius: 0 4px 4px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .instructions .tip strong {
+            color: var(--accent-primary);
         }
 
         .btn-connect {
@@ -261,6 +305,13 @@
 
         .btn-connect:active {
             transform: translateY(0);
+        }
+
+        .connect-note {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            margin-top: 1rem;
         }
 
         /* ═══════════════════════════════════════════════════════════════════════
@@ -390,6 +441,17 @@
             box-shadow: 0 4px 20px var(--accent-glow);
         }
 
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
         .btn-success {
             background: var(--success-dim);
             color: var(--success);
@@ -410,6 +472,11 @@
         .btn-warning:hover:not(:disabled) {
             background: var(--warning);
             color: var(--bg-primary);
+        }
+
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
         }
 
         .button-row {
@@ -478,6 +545,19 @@
             border-radius: 4px;
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Copy button feedback */
+        .btn-copied {
+            background: var(--success-dim) !important;
+            color: var(--success) !important;
+            border-color: var(--success) !important;
+        }
+
         /* ═══════════════════════════════════════════════════════════════════════
            FOOTER
            ═══════════════════════════════════════════════════════════════════════ */
@@ -529,6 +609,16 @@
             .btn {
                 width: 100%;
             }
+
+            .panel-header {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         /* Hidden elements */
@@ -572,8 +662,20 @@
             </div>
             <div class="panel-body">
                 <div class="connect-section" id="connectSection">
-                    <p>Connect your ESP32 device via USB to get started</p>
-                    <button class="btn-connect" type="button" id="connectButton">Connect Device</button>
+                    <div class="instructions">
+                        <h3>Before You Start</h3>
+                        <ol>
+                            <li><strong>Hold the BOOT button</strong> on your ESP32 (sometimes labeled "0")</li>
+                            <li><strong>While holding BOOT</strong>, connect the USB cable to your computer</li>
+                            <li>Wait for the USB "connected" sound, then <strong>release BOOT</strong></li>
+                            <li>Click <strong>Start</strong> below and select your device from the list</li>
+                        </ol>
+                        <div class="tip">
+                            <strong>Tip:</strong> If already connected, hold BOOT, press RST, then release both. Not sure which port? Unplug, check the list, replug — the new one is your device.
+                        </div>
+                    </div>
+                    <button class="btn-connect" type="button" id="connectButton">Start</button>
+                    <p class="connect-note">A browser popup will appear to select your device</p>
                 </div>
 
                 <!-- PROGRAMMING SECTION (shown after connect) -->
@@ -606,7 +708,10 @@
             <div class="panel">
                 <div class="panel-header">
                     <h2>Console Output</h2>
-                    <label id="lblConnTo" class="status-badge">Connected</label>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary btn-sm" type="button" id="copyConsoleButton">Copy Log</button>
+                        <label id="lblConnTo" class="status-badge">Connected</label>
+                    </div>
                 </div>
                 <div class="panel-body">
                     <div id="terminal"></div>
