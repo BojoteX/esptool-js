@@ -8656,6 +8656,21 @@ let $382e02c9bbd5d50b$var$consoleLog = "";
 // Store selected filename to detect merged vs sketch
 let $382e02c9bbd5d50b$var$selectedFilename = "";
 const $382e02c9bbd5d50b$var$serialLib = !navigator.serial && navigator.usb ? (0, $d2bbb828b377f05f$export$6c2c9a00e27c07e8) : navigator.serial;
+// USB Vendor IDs for ESP32 compatible devices
+const $382e02c9bbd5d50b$var$espPortFilters = [
+    {
+        usbVendorId: 0x303a
+    },
+    {
+        usbVendorId: 0x10c4
+    },
+    {
+        usbVendorId: 0x1a86
+    },
+    {
+        usbVendorId: 0x0403
+    }
+];
 const $382e02c9bbd5d50b$var$term = new Terminal({
     cols: 120,
     rows: 40
@@ -8726,7 +8741,9 @@ $382e02c9bbd5d50b$var$modalCloseBtn.onclick = ()=>{
 $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
     try {
         if ($382e02c9bbd5d50b$var$device === null) {
-            $382e02c9bbd5d50b$var$device = await $382e02c9bbd5d50b$var$serialLib.requestPort({});
+            $382e02c9bbd5d50b$var$device = await $382e02c9bbd5d50b$var$serialLib.requestPort({
+                filters: $382e02c9bbd5d50b$var$espPortFilters
+            });
             $382e02c9bbd5d50b$var$deviceInfo = $382e02c9bbd5d50b$var$device.getInfo();
             $382e02c9bbd5d50b$var$transport = new (0, $5403ce1ef8b7ffb7$export$86495b081fef8e52)($382e02c9bbd5d50b$var$device, true);
         }
@@ -8859,7 +8876,9 @@ const $382e02c9bbd5d50b$var$sleep = async (ms)=>{
 };
 $382e02c9bbd5d50b$var$consoleStartButton.onclick = async ()=>{
     if ($382e02c9bbd5d50b$var$device === null) {
-        $382e02c9bbd5d50b$var$device = await $382e02c9bbd5d50b$var$serialLib.requestPort({});
+        $382e02c9bbd5d50b$var$device = await $382e02c9bbd5d50b$var$serialLib.requestPort({
+            filters: $382e02c9bbd5d50b$var$espPortFilters
+        });
         $382e02c9bbd5d50b$var$transport = new (0, $5403ce1ef8b7ffb7$export$86495b081fef8e52)($382e02c9bbd5d50b$var$device, true);
         $382e02c9bbd5d50b$var$deviceInfo = $382e02c9bbd5d50b$var$device.getInfo();
         $382e02c9bbd5d50b$var$transport.setDeviceLostCallback(async ()=>{
@@ -8932,4 +8951,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.620019ad.js.map
+//# sourceMappingURL=typescript.c138c922.js.map
