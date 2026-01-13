@@ -585,6 +585,27 @@
             color: var(--accent-secondary);
         }
 
+        .debug-option {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .debug-option input[type="checkbox"] {
+            accent-color: var(--accent-primary);
+            width: 14px;
+            height: 14px;
+        }
+
+        .debug-option label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            cursor: pointer;
+        }
+
         /* ═══════════════════════════════════════════════════════════════════════
            RESPONSIVE
            ═══════════════════════════════════════════════════════════════════════ */
@@ -649,7 +670,6 @@
     <input type="hidden" id="consoleBaudrates" value="115200">
     <input type="hidden" id="reconnectDelay" value="1000">
     <input type="hidden" id="maxRetries" value="5">
-    <input type="hidden" id="debugLogging" value="">
     <input type="hidden" id="flashMode" value="keep">
     <input type="hidden" id="flashFreq" value="keep">
     <input type="hidden" id="flashSize" value="detect">
@@ -722,6 +742,10 @@
 
     <footer>
         <p>Powered by <a href="https://github.com/espressif/esptool-js" target="_blank">esptool-js</a> | <a href="https://github.com/BojoteX/CockpitOS" target="_blank">CockpitOS</a></p>
+        <div class="debug-option">
+            <input type="checkbox" id="debugLogging">
+            <label for="debugLogging">Enable verbose logging</label>
+        </div>
     </footer>
 
     <!-- Legacy hidden elements for compatibility -->
