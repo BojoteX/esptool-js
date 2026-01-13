@@ -1,130 +1,798 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>ESP Tool</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css">
-        <link
-            href="https://fonts.googleapis.com/css?family=Orbitron"
-            rel="stylesheet"
-        />
-        <link rel="icon" href="../assets/favicon.ico" />
-         <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    </head>
-    <body>
-        <h1 align="center"><p><img src="../assets/esp-logo.png" width="42" height="42" style="vertical-align:middle" crossorigin></img> ESP Tool</p></h1>
-        <h4 align="center">A Serial Flasher utility for Espressif chips</h4>
-        <div id="safariErr" style="display:none"><p align="center" style="color:red">This tool is not supported on Safari browser!</p>
-        </div>
-        <div align="center">
-            <a class="btn btn-info" href="./docs/index.html">View the API Documentation</a>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP Tool — CockpitOS Firmware Flasher</title>
+    <meta name="description" content="Flash ESP32 firmware directly from your browser using Web Serial API">
 
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="debugLogging" value="">
-                <label class="form-check-label" for="debugLogging">Show Debug log</label>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css">
+    <link rel="icon" href="../assets/favicon.ico" />
+
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════════════
+           CSS VARIABLES — COCKPIT THEME
+           ═══════════════════════════════════════════════════════════════════════ */
+        :root {
+            /* Core palette */
+            --bg-primary: #0a0c0f;
+            --bg-secondary: #0f1215;
+            --bg-tertiary: #151a1f;
+            --bg-card: #1a1f25;
+            --bg-elevated: #222932;
+
+            /* Amber cockpit accent */
+            --accent-primary: #ff9500;
+            --accent-secondary: #ffb347;
+            --accent-glow: rgba(255, 149, 0, 0.4);
+            --accent-dim: rgba(255, 149, 0, 0.15);
+
+            /* Status colors */
+            --success: #00ff88;
+            --success-dim: rgba(0, 255, 136, 0.2);
+            --warning: #ffcc00;
+            --error: #ff4444;
+            --info: #00aaff;
+
+            /* Text */
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --text-tertiary: #5f6368;
+            --text-accent: var(--accent-primary);
+
+            /* Borders & lines */
+            --border-primary: rgba(255, 255, 255, 0.08);
+            --border-accent: rgba(255, 149, 0, 0.3);
+            --border-glow: rgba(255, 149, 0, 0.5);
+
+            /* Typography */
+            --font-display: 'Orbitron', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-body: 'Barlow', sans-serif;
+
+            /* Effects */
+            --transition-fast: 150ms ease;
+            --transition-medium: 300ms ease;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════════════════════════════════ */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════════════ */
+        header {
+            background: rgba(10, 12, 15, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-primary);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-section img {
+            height: 48px;
+            width: auto;
+        }
+
+        .title-group h1 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .title-group h1 span {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title-group p {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .debug-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .debug-toggle input[type="checkbox"] {
+            accent-color: var(--accent-primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-docs {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 1rem;
+            background: var(--accent-dim);
+            color: var(--accent-primary);
+            border: 1px solid var(--border-accent);
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-docs:hover {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        /* Safari Warning */
+        .safari-warning {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            padding: 1rem;
+            text-align: center;
+            font-family: var(--font-body);
+            display: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           MAIN CONTAINER
+           ═══════════════════════════════════════════════════════════════════════ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           PANELS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background: var(--bg-elevated);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-header h2 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+        }
+
+        /* Connection Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 100px;
+            background: var(--success-dim);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FORM CONTROLS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+            color: var(--text-primary);
+            transition: border-color var(--transition-fast);
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        input[type="number"] {
+            width: 80px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           BUTTONS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .btn {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.6rem 1.25rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--accent-secondary);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            border-color: var(--border-accent);
+            color: var(--accent-primary);
+        }
+
+        .btn-danger {
+            background: rgba(255, 68, 68, 0.15);
+            color: var(--error);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-warning {
+            background: rgba(255, 204, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            background: var(--warning);
+            color: var(--bg-primary);
+        }
+
+        .btn-success {
+            background: var(--success-dim);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: var(--success);
+            color: var(--bg-primary);
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FILE TABLE
+           ═══════════════════════════════════════════════════════════════════════ */
+        .file-table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-body);
+        }
+
+        thead {
+            background: var(--bg-elevated);
+        }
+
+        th {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-primary);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        td input[type="text"] {
+            width: 120px;
+        }
+
+        td input[type="file"] {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        td input[type="file"]::file-selector-button {
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            margin-right: 0.75rem;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        td input[type="file"]::file-selector-button:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Progress bar */
+        progress {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+
+        progress::-webkit-progress-bar {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        progress::-webkit-progress-value {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+        }
+
+        progress::-moz-progress-bar {
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 4px;
+        }
+
+        .progress-cell {
+            min-width: 150px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FLASH OPTIONS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .flash-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .flash-option {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .flash-option label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           ALERT
+           ═══════════════════════════════════════════════════════════════════════ */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .alert-danger {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            color: var(--error);
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity var(--transition-fast);
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           TERMINAL
+           ═══════════════════════════════════════════════════════════════════════ */
+        #terminal {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        #terminal .xterm {
+            padding: 0.5rem;
+        }
+
+        #terminal .xterm-viewport {
+            border-radius: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════════════════ */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-primary);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        footer a:hover {
+            color: var(--accent-secondary);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo-section {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .flash-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="https://raw.githubusercontent.com/BojoteX/CockpitOS/main/CockpitOS_logo_small.png" alt="CockpitOS Logo" crossorigin>
+                <div class="title-group">
+                    <h1><span>ESP Tool</span></h1>
+                    <p>Web Serial Flasher for Espressif Chips</p>
+                </div>
             </div>
-          </div>
-        <div class="container" id="main">
-            <hr/>
-            <div id="program">
-                <h3> Program </h3>
-                <label for="baudrates" id="lblBaudrate">Baudrate:</label>
-                <label style="display:none" id="lblConnTo">Connected to device: </label>
-                <select name="baudrates" id="baudrates">
-                    <option value="921600">921600</option>
-                    <option value="460800">460800</option>
-                    <option value="230400">230400</option>
-                    <option value="115200">115200</option>
-                </select>
+            <div class="header-actions">
+                <div class="debug-toggle">
+                    <input type="checkbox" id="debugLogging" value="">
+                    <label for="debugLogging">Debug Log</label>
+                </div>
+                <a class="btn-docs" href="./docs/index.html">API Docs</a>
+            </div>
+        </div>
+    </header>
 
-                <br><br>
+    <div class="safari-warning" id="safariErr">
+        This tool is not supported on Safari browser. Please use Chrome or Edge.
+    </div>
 
-                <input class="btn btn-info btn-sm" type="button" id="connectButton" value="Connect" />
-                <input class="btn btn-info btn-sm" type="button" id="copyTraceButton" value="Copy Trace" />
-                <input class="btn btn-warning btn-sm" type="button" id="disconnectButton" value="Disconnect" />
-                <input class="btn btn-danger btn-sm" type="button" id="eraseButton" value="Erase Flash" />
-                <br>
+    <div class="container" id="main">
+        <!-- PROGRAM PANEL -->
+        <div class="panel" id="program">
+            <div class="panel-header">
+                <h2>Program Device</h2>
+                <label id="lblConnTo" class="status-badge" style="display:none">Connected</label>
+            </div>
+            <div class="panel-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="baudrates" id="lblBaudrate">Baudrate:</label>
+                        <select name="baudrates" id="baudrates">
+                            <option value="921600">921600</option>
+                            <option value="460800">460800</option>
+                            <option value="230400">230400</option>
+                            <option value="115200">115200</option>
+                        </select>
+                    </div>
+                </div>
 
-                <div class="alert alert-danger alert-dismissible" id="alertDiv" style="display:none; margin-top:10px">
-                    <a href="#" class="close" aria-label="close" onclick="$('.alert').hide()">&times;</a>
+                <div class="button-group">
+                    <button class="btn btn-primary" type="button" id="connectButton">Connect</button>
+                    <button class="btn btn-secondary" type="button" id="copyTraceButton">Copy Trace</button>
+                    <button class="btn btn-warning" type="button" id="disconnectButton">Disconnect</button>
+                    <button class="btn btn-danger" type="button" id="eraseButton">Erase Flash</button>
+                </div>
+
+                <div class="alert alert-danger" id="alertDiv" style="display:none">
                     <span id="alertmsg"></span>
+                    <button class="alert-close" onclick="document.getElementById('alertDiv').style.display='none'">&times;</button>
                 </div>
 
                 <div id="files">
-                    <table class="table table-striped" id="fileTable">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Flash Address</th>
-                                <th>File</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                        </tbody>
-                    </table>
-                    <input class="btn btn-info btn-sm" type="button" id="addFile" value="Add File" />
-                    <br><br>
-                    <label for="flashMode" id="lblFlashMode">Flash Mode:</label>
-                    <select name="flashMode" id="flashMode">
-                        <option value="keep" selected>keep</option>
-                        <option value="dio">dio</option>
-                        <option value="qio">qio</option>
-                        <option value="dout">dout</option>
-                        <option value="qout">qout</option>
-                    </select>
-                    <br><br>
-                    <label for="flashFreq" id="lblFlashFreq">Flash Frequency:</label>
-                    <select name="flashFreq" id="flashFreq">
-                        <option value="keep">keep</option>
-                    </select>
-                    <br><br>
-                    <label for="flashSize" id="lblFlashSize">Flash Size:</label>
-                    <select name="flashSize" id="flashSize">
-                        <option value="detect">detect</option>
-                        <option value="keep">keep</option>
-                    </select>
-                    <br><br>
-                    <input class="btn btn-info btn-sm" type="button" id="programButton" value="Program" />
+                    <div class="file-table-container">
+                        <table id="fileTable">
+                            <thead>
+                                <tr>
+                                    <th>Flash Address</th>
+                                    <th>Firmware File</th>
+                                    <th>Progress</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button class="btn btn-secondary" type="button" id="addFile">+ Add File</button>
+
+                    <div class="flash-options">
+                        <div class="flash-option">
+                            <label for="flashMode" id="lblFlashMode">Flash Mode</label>
+                            <select name="flashMode" id="flashMode">
+                                <option value="keep" selected>keep</option>
+                                <option value="dio">dio</option>
+                                <option value="qio">qio</option>
+                                <option value="dout">dout</option>
+                                <option value="qout">qout</option>
+                            </select>
+                        </div>
+                        <div class="flash-option">
+                            <label for="flashFreq" id="lblFlashFreq">Flash Frequency</label>
+                            <select name="flashFreq" id="flashFreq">
+                                <option value="keep">keep</option>
+                            </select>
+                        </div>
+                        <div class="flash-option">
+                            <label for="flashSize" id="lblFlashSize">Flash Size</label>
+                            <select name="flashSize" id="flashSize">
+                                <option value="detect">detect</option>
+                                <option value="keep">keep</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success" type="button" id="programButton">Program Flash</button>
                 </div>
-                <output id="list"></output>
-                <hr/>
             </div>
-            <div id="console">
-                <h3>Console </h3>
-                <label style="display:none" id="lblConsoleFor">Connected to device: </label>
-                <label for="consoleBaudrates" id="lblConsoleBaudrate">Baudrate:</label>
-                <select name="consoleBaudrates" id="consoleBaudrates">
-                    <option value="115200">115200</option>
-                    <option value="74880">74880</option>
-                </select>
-                <label for="reconnectDelay" id="lblReconnectDelay">Reconnect Delay (ms):</label>
-                <input type="number" id="reconnectDelay" name="reconnectDelay" value="1000" min="100" max="10000" step="100">
-                <label for="maxRetries" id="lblMaxRetries">Max Retries:</label>
-                <input type="number" id="maxRetries" name="maxRetries" value="5" min="1" max="20" step="1">
-
-                <br><br>
-
-                <input class="btn btn-info" type="button" id="consoleStartButton" value="Start" />
-                <input class="btn btn-info" type="button" id="consoleStopButton" value="Stop" />
-                <input class="btn btn-info" type="button" id="resetButton" value="Reset" />
-                <hr/>
-            </div>
-            <div id="terminal"></div>
         </div>
-        <script src="index.ts" type="module"></script>
-        <script>
-            // Safari 3.0+ "[object HTMLElementConstructor]"
-            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
 
-            if(isSafari)
-            {
-               document.getElementById("safariErr").style.display = "inline";
-               document.getElementById("main").style.display = "none";
-            }
-        </script>
-    </body>
+        <!-- CONSOLE PANEL -->
+        <div class="panel" id="console">
+            <div class="panel-header">
+                <h2>Serial Console</h2>
+                <label id="lblConsoleFor" class="status-badge" style="display:none">Monitoring</label>
+            </div>
+            <div class="panel-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="consoleBaudrates" id="lblConsoleBaudrate">Baudrate:</label>
+                        <select name="consoleBaudrates" id="consoleBaudrates">
+                            <option value="115200">115200</option>
+                            <option value="74880">74880</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reconnectDelay" id="lblReconnectDelay">Reconnect Delay (ms):</label>
+                        <input type="number" id="reconnectDelay" name="reconnectDelay" value="1000" min="100" max="10000" step="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxRetries" id="lblMaxRetries">Max Retries:</label>
+                        <input type="number" id="maxRetries" name="maxRetries" value="5" min="1" max="20" step="1">
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" type="button" id="consoleStartButton">Start Monitor</button>
+                    <button class="btn btn-warning" type="button" id="consoleStopButton">Stop</button>
+                    <button class="btn btn-secondary" type="button" id="resetButton">Reset Device</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TERMINAL OUTPUT -->
+        <div id="terminal"></div>
+    </div>
+
+    <footer>
+        <p>Powered by <a href="https://github.com/espressif/esptool-js" target="_blank">esptool-js</a> | Themed for <a href="https://github.com/BojoteX/CockpitOS" target="_blank">CockpitOS</a></p>
+    </footer>
+
+    <script src="index.ts" type="module"></script>
+    <script>
+        // Safari detection
+        var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+        if(isSafari) {
+            document.getElementById("safariErr").style.display = "block";
+            document.getElementById("main").style.display = "none";
+        }
+    </script>
+</body>
 </html>

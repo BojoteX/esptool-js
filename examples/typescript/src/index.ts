@@ -276,12 +276,12 @@ addFileButton.onclick = () => {
   const cell4 = row.insertCell(3);
   cell4.classList.add("action-cell");
   if (rowCount > 1) {
-    const element4 = document.createElement("input");
+    const element4 = document.createElement("button");
     element4.type = "button";
     const btnName = "button" + rowCount;
     element4.name = btnName;
-    element4.setAttribute("class", "btn");
-    element4.setAttribute("value", "Remove"); // or element1.value = "button";
+    element4.setAttribute("class", "btn btn-danger");
+    element4.textContent = "Remove";
     element4.onclick = function () {
       removeRow(row);
     };
