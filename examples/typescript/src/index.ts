@@ -229,7 +229,7 @@ programButton.onclick = async () => {
 
   try {
     const flashOptions: FlashOptions = {
-      fileArray: [{ data: firmwareData, address: 0x0 }],
+      fileArray: [{ data: firmwareData, address: 0x10000 }],
       flashSize: "4MB",
       flashMode: "qio",
       flashFreq: "80m",
