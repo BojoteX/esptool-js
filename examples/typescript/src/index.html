@@ -694,6 +694,10 @@
                             <strong>Tip:</strong> If already connected, hold BOOT, press RST, then release both. Not sure which port? Unplug, check the list, replug — the new one is your device.
                         </div>
                     </div>
+                    <div class="debug-option">
+                        <input type="checkbox" id="debugLogging">
+                        <label for="debugLogging">Enable verbose logging</label>
+                    </div>
                     <button class="btn-connect" type="button" id="connectButton">Start</button>
                     <p class="connect-note">A browser popup will appear to select your device</p>
                 </div>
@@ -706,19 +710,7 @@
                     </div>
 
                     <div class="file-select-area">
-                        <label>Bootloader (CockpitOS.ino.bootloader.bin)</label>
-                        <input type="file" id="bootloaderFile" accept=".bin">
-                    </div>
-                    <div class="file-select-area">
-                        <label>Partitions (CockpitOS.ino.partitions.bin)</label>
-                        <input type="file" id="partitionsFile" accept=".bin">
-                    </div>
-                    <div class="file-select-area">
-                        <label>Boot App (boot_app0.bin)</label>
-                        <input type="file" id="bootAppFile" accept=".bin">
-                    </div>
-                    <div class="file-select-area">
-                        <label>Firmware (CockpitOS.ino.bin)</label>
+                        <label>Select firmware file (CockpitOS.ino.merged.bin)</label>
                         <input type="file" id="firmwareFile" accept=".bin">
                     </div>
 
@@ -754,10 +746,6 @@
 
     <footer>
         <p>Powered by <a href="https://github.com/espressif/esptool-js" target="_blank">esptool-js</a> | <a href="https://github.com/BojoteX/CockpitOS" target="_blank">CockpitOS</a></p>
-        <div class="debug-option">
-            <input type="checkbox" id="debugLogging">
-            <label for="debugLogging">Enable verbose logging</label>
-        </div>
     </footer>
 
     <!-- Legacy hidden elements for compatibility -->
