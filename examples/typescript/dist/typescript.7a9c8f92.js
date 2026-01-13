@@ -8644,6 +8644,9 @@ const $382e02c9bbd5d50b$var$debugLogging = document.getElementById("debugLogging
 const $382e02c9bbd5d50b$var$connectSection = document.getElementById("connectSection");
 const $382e02c9bbd5d50b$var$programSection = document.getElementById("programSection");
 const $382e02c9bbd5d50b$var$terminalContainer = document.getElementById("terminalContainer");
+const $382e02c9bbd5d50b$var$bootloaderFile = document.getElementById("bootloaderFile");
+const $382e02c9bbd5d50b$var$partitionsFile = document.getElementById("partitionsFile");
+const $382e02c9bbd5d50b$var$bootAppFile = document.getElementById("bootAppFile");
 const $382e02c9bbd5d50b$var$firmwareFile = document.getElementById("firmwareFile");
 const $382e02c9bbd5d50b$var$mainProgress = document.getElementById("mainProgress");
 const $382e02c9bbd5d50b$var$progressContainer = document.getElementById("progressContainer");
@@ -8661,6 +8664,9 @@ let $382e02c9bbd5d50b$var$deviceInfo = null;
 let $382e02c9bbd5d50b$var$transport;
 let $382e02c9bbd5d50b$var$chip = null;
 let $382e02c9bbd5d50b$var$esploader;
+let $382e02c9bbd5d50b$var$bootloaderData = null;
+let $382e02c9bbd5d50b$var$partitionsData = null;
+let $382e02c9bbd5d50b$var$bootAppData = null;
 let $382e02c9bbd5d50b$var$firmwareData = null;
 const $382e02c9bbd5d50b$var$espLoaderTerminal = {
     clean () {
@@ -8693,19 +8699,38 @@ $382e02c9bbd5d50b$var$copyConsoleButton.onclick = async ()=>{
         console.error("Failed to copy:", err);
     }
 };
-// Handle firmware file selection
-$382e02c9bbd5d50b$var$firmwareFile.addEventListener("change", (evt)=>{
+// Helper to read file into Uint8Array
+function $382e02c9bbd5d50b$var$readFileAsUint8Array(file) {
+    return new Promise((resolve, reject)=>{
+        const reader = new FileReader();
+        reader.onload = (ev)=>{
+            if (ev.target?.result instanceof ArrayBuffer) resolve(new Uint8Array(ev.target.result));
+            else reject(new Error("Failed to read file"));
+        };
+        reader.onerror = ()=>reject(reader.error);
+        reader.readAsArrayBuffer(file);
+    });
+}
+// Handle file selections
+$382e02c9bbd5d50b$var$bootloaderFile.addEventListener("change", async (evt)=>{
     const target = evt.target;
     const file = target.files?.[0];
-    if (!file) {
-        $382e02c9bbd5d50b$var$firmwareData = null;
-        return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
-        if (ev.target?.result instanceof ArrayBuffer) $382e02c9bbd5d50b$var$firmwareData = new Uint8Array(ev.target.result);
-    };
-    reader.readAsArrayBuffer(file);
+    $382e02c9bbd5d50b$var$bootloaderData = file ? await $382e02c9bbd5d50b$var$readFileAsUint8Array(file) : null;
+});
+$382e02c9bbd5d50b$var$partitionsFile.addEventListener("change", async (evt)=>{
+    const target = evt.target;
+    const file = target.files?.[0];
+    $382e02c9bbd5d50b$var$partitionsData = file ? await $382e02c9bbd5d50b$var$readFileAsUint8Array(file) : null;
+});
+$382e02c9bbd5d50b$var$bootAppFile.addEventListener("change", async (evt)=>{
+    const target = evt.target;
+    const file = target.files?.[0];
+    $382e02c9bbd5d50b$var$bootAppData = file ? await $382e02c9bbd5d50b$var$readFileAsUint8Array(file) : null;
+});
+$382e02c9bbd5d50b$var$firmwareFile.addEventListener("change", async (evt)=>{
+    const target = evt.target;
+    const file = target.files?.[0];
+    $382e02c9bbd5d50b$var$firmwareData = file ? await $382e02c9bbd5d50b$var$readFileAsUint8Array(file) : null;
 });
 $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
     try {
@@ -8764,6 +8789,9 @@ $382e02c9bbd5d50b$var$eraseButton.onclick = async ()=>{
     $382e02c9bbd5d50b$var$deviceInfo = null;
     $382e02c9bbd5d50b$var$transport = null;
     $382e02c9bbd5d50b$var$chip = null;
+    $382e02c9bbd5d50b$var$bootloaderData = null;
+    $382e02c9bbd5d50b$var$partitionsData = null;
+    $382e02c9bbd5d50b$var$bootAppData = null;
     $382e02c9bbd5d50b$var$firmwareData = null;
 }
 $382e02c9bbd5d50b$var$disconnectButton.onclick = async ()=>{
@@ -8776,15 +8804,23 @@ $382e02c9bbd5d50b$var$disconnectButton.onclick = async ()=>{
     $382e02c9bbd5d50b$var$terminalContainer.style.display = "none";
     $382e02c9bbd5d50b$var$progressContainer.style.display = "none";
     $382e02c9bbd5d50b$var$mainProgress.value = 0;
+    $382e02c9bbd5d50b$var$bootloaderFile.value = "";
+    $382e02c9bbd5d50b$var$partitionsFile.value = "";
+    $382e02c9bbd5d50b$var$bootAppFile.value = "";
     $382e02c9bbd5d50b$var$firmwareFile.value = "";
     $382e02c9bbd5d50b$var$alertDiv.style.display = "none";
     $382e02c9bbd5d50b$var$cleanUp();
 };
 $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
     const alertMsg = document.getElementById("alertmsg");
-    // Validate firmware file is selected
-    if (!$382e02c9bbd5d50b$var$firmwareData) {
-        alertMsg.innerHTML = "<strong>Please select a firmware file first!</strong>";
+    // Validate all required files are selected
+    const missingFiles = [];
+    if (!$382e02c9bbd5d50b$var$bootloaderData) missingFiles.push("Bootloader");
+    if (!$382e02c9bbd5d50b$var$partitionsData) missingFiles.push("Partitions");
+    if (!$382e02c9bbd5d50b$var$bootAppData) missingFiles.push("Boot App");
+    if (!$382e02c9bbd5d50b$var$firmwareData) missingFiles.push("Firmware");
+    if (missingFiles.length > 0) {
+        alertMsg.innerHTML = `<strong>Please select all files: ${missingFiles.join(", ")}</strong>`;
         $382e02c9bbd5d50b$var$alertDiv.style.display = "flex";
         return;
     }
@@ -8794,8 +8830,21 @@ $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
     $382e02c9bbd5d50b$var$progressContainer.style.display = "block";
     $382e02c9bbd5d50b$var$mainProgress.value = 0;
     try {
+        // Flash all 4 files to their respective addresses
         const flashOptions = {
             fileArray: [
+                {
+                    data: $382e02c9bbd5d50b$var$bootloaderData,
+                    address: 0x1000
+                },
+                {
+                    data: $382e02c9bbd5d50b$var$partitionsData,
+                    address: 0x8000
+                },
+                {
+                    data: $382e02c9bbd5d50b$var$bootAppData,
+                    address: 0xe000
+                },
                 {
                     data: $382e02c9bbd5d50b$var$firmwareData,
                     address: 0x10000
@@ -8807,7 +8856,10 @@ $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
             eraseAll: false,
             compress: true,
             reportProgress: (fileIndex, written, total)=>{
-                $382e02c9bbd5d50b$var$mainProgress.value = written / total * 100;
+                // Calculate overall progress across all 4 files
+                const fileProgress = written / total;
+                const overallProgress = (fileIndex + fileProgress) / 4 * 100;
+                $382e02c9bbd5d50b$var$mainProgress.value = overallProgress;
             },
             calculateMD5Hash: (image)=>{
                 const latin1String = Array.from(image, (byte)=>String.fromCharCode(byte)).join("");
@@ -8905,4 +8957,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.92ab5061.js.map
+//# sourceMappingURL=typescript.7a9c8f92.js.map

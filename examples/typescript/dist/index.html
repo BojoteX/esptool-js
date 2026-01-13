@@ -655,7 +655,19 @@ footer a:hover {
                     </div>
 
                     <div class="file-select-area">
-                        <label>Select your firmware file (.bin)</label>
+                        <label>Bootloader (CockpitOS.ino.bootloader.bin)</label>
+                        <input type="file" id="bootloaderFile" accept=".bin">
+                    </div>
+                    <div class="file-select-area">
+                        <label>Partitions (CockpitOS.ino.partitions.bin)</label>
+                        <input type="file" id="partitionsFile" accept=".bin">
+                    </div>
+                    <div class="file-select-area">
+                        <label>Boot App (boot_app0.bin)</label>
+                        <input type="file" id="bootAppFile" accept=".bin">
+                    </div>
+                    <div class="file-select-area">
+                        <label>Firmware (CockpitOS.ino.bin)</label>
                         <input type="file" id="firmwareFile" accept=".bin">
                     </div>
 
@@ -717,7 +729,7 @@ footer a:hover {
         <button id="resetButton"></button>
     </div>
 
-    <script src="typescript.92ab5061.js" type="module"></script>
+    <script src="typescript.7a9c8f92.js" type="module"></script>
     <script>// Safari detection
 var isSafari = /constructor/i.test(window.HTMLElement) || function(p) {
     return p.toString() === "[object SafariRemoteNotification]";

@@ -34,6 +34,9 @@ const debugLogging = document.getElementById("debugLogging") as HTMLInputElement
 const connectSection = document.getElementById("connectSection");
 const programSection = document.getElementById("programSection");
 const terminalContainer = document.getElementById("terminalContainer");
+const bootloaderFile = document.getElementById("bootloaderFile") as HTMLInputElement;
+const partitionsFile = document.getElementById("partitionsFile") as HTMLInputElement;
+const bootAppFile = document.getElementById("bootAppFile") as HTMLInputElement;
 const firmwareFile = document.getElementById("firmwareFile") as HTMLInputElement;
 const mainProgress = document.getElementById("mainProgress") as HTMLProgressElement;
 const progressContainer = document.getElementById("progressContainer");
@@ -66,6 +69,9 @@ let deviceInfo = null;
 let transport: Transport;
 let chip: string = null;
 let esploader: ESPLoader;
+let bootloaderData: Uint8Array = null;
+let partitionsData: Uint8Array = null;
+let bootAppData: Uint8Array = null;
 let firmwareData: Uint8Array = null;
 
 const espLoaderTerminal = {
@@ -101,23 +107,45 @@ copyConsoleButton.onclick = async () => {
   }
 };
 
-// Handle firmware file selection
-firmwareFile.addEventListener("change", (evt: Event) => {
+// Helper to read file into Uint8Array
+function readFileAsUint8Array(file: File): Promise<Uint8Array> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (ev: ProgressEvent<FileReader>) => {
+      if (ev.target?.result instanceof ArrayBuffer) {
+        resolve(new Uint8Array(ev.target.result));
+      } else {
+        reject(new Error("Failed to read file"));
+      }
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// Handle file selections
+bootloaderFile.addEventListener("change", async (evt: Event) => {
   const target = evt.target as HTMLInputElement;
   const file = target.files?.[0];
+  bootloaderData = file ? await readFileAsUint8Array(file) : null;
+});
 
-  if (!file) {
-    firmwareData = null;
-    return;
-  }
+partitionsFile.addEventListener("change", async (evt: Event) => {
+  const target = evt.target as HTMLInputElement;
+  const file = target.files?.[0];
+  partitionsData = file ? await readFileAsUint8Array(file) : null;
+});
 
-  const reader = new FileReader();
-  reader.onload = (ev: ProgressEvent<FileReader>) => {
-    if (ev.target?.result instanceof ArrayBuffer) {
-      firmwareData = new Uint8Array(ev.target.result);
-    }
-  };
-  reader.readAsArrayBuffer(file);
+bootAppFile.addEventListener("change", async (evt: Event) => {
+  const target = evt.target as HTMLInputElement;
+  const file = target.files?.[0];
+  bootAppData = file ? await readFileAsUint8Array(file) : null;
+});
+
+firmwareFile.addEventListener("change", async (evt: Event) => {
+  const target = evt.target as HTMLInputElement;
+  const file = target.files?.[0];
+  firmwareData = file ? await readFileAsUint8Array(file) : null;
 });
 
 connectButton.onclick = async () => {
@@ -189,6 +217,9 @@ function cleanUp() {
   deviceInfo = null;
   transport = null;
   chip = null;
+  bootloaderData = null;
+  partitionsData = null;
+  bootAppData = null;
   firmwareData = null;
 }
 
@@ -204,6 +235,9 @@ disconnectButton.onclick = async () => {
   terminalContainer.style.display = "none";
   progressContainer.style.display = "none";
   mainProgress.value = 0;
+  bootloaderFile.value = "";
+  partitionsFile.value = "";
+  bootAppFile.value = "";
   firmwareFile.value = "";
   alertDiv.style.display = "none";
 
@@ -213,9 +247,15 @@ disconnectButton.onclick = async () => {
 programButton.onclick = async () => {
   const alertMsg = document.getElementById("alertmsg");
 
-  // Validate firmware file is selected
-  if (!firmwareData) {
-    alertMsg.innerHTML = "<strong>Please select a firmware file first!</strong>";
+  // Validate all required files are selected
+  const missingFiles = [];
+  if (!bootloaderData) missingFiles.push("Bootloader");
+  if (!partitionsData) missingFiles.push("Partitions");
+  if (!bootAppData) missingFiles.push("Boot App");
+  if (!firmwareData) missingFiles.push("Firmware");
+
+  if (missingFiles.length > 0) {
+    alertMsg.innerHTML = `<strong>Please select all files: ${missingFiles.join(", ")}</strong>`;
     alertDiv.style.display = "flex";
     return;
   }
@@ -228,15 +268,24 @@ programButton.onclick = async () => {
   mainProgress.value = 0;
 
   try {
+    // Flash all 4 files to their respective addresses
     const flashOptions: FlashOptions = {
-      fileArray: [{ data: firmwareData, address: 0x10000 }],
+      fileArray: [
+        { data: bootloaderData, address: 0x1000 },    // Bootloader
+        { data: partitionsData, address: 0x8000 },    // Partition table
+        { data: bootAppData, address: 0xe000 },       // Boot app
+        { data: firmwareData, address: 0x10000 },     // Application
+      ],
       flashSize: "4MB",
       flashMode: "qio",
       flashFreq: "80m",
       eraseAll: false,
       compress: true,
       reportProgress: (fileIndex, written, total) => {
-        mainProgress.value = (written / total) * 100;
+        // Calculate overall progress across all 4 files
+        const fileProgress = written / total;
+        const overallProgress = ((fileIndex + fileProgress) / 4) * 100;
+        mainProgress.value = overallProgress;
       },
       calculateMD5Hash: (image: Uint8Array) => {
         const latin1String = Array.from(image, (byte) => String.fromCharCode(byte)).join("");
