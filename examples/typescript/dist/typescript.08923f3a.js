@@ -8798,7 +8798,7 @@ $382e02c9bbd5d50b$var$programButton.onclick = async ()=>{
             fileArray: [
                 {
                     data: $382e02c9bbd5d50b$var$firmwareData,
-                    address: 0x10000
+                    address: 0x0
                 }
             ],
             flashSize: "4MB",
@@ -8905,4 +8905,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.92ab5061.js.map
+//# sourceMappingURL=typescript.08923f3a.js.map
