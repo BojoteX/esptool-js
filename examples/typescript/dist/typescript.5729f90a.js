@@ -8757,25 +8757,9 @@ $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
             debugLogging: $382e02c9bbd5d50b$var$debugLogging.checked
         };
         $382e02c9bbd5d50b$var$esploader = new (0, $2a692e77237d8889$export$b0f7a6c745790308)(flashOptions);
-        // Determine reset mode based on USB device type
-        // VendorID 0x303a = Espressif native USB
-        // ProductID 0x0002 = ESP32-S2 USB-OTG (no DTR/RTS, needs manual boot)
-        // ProductID 0x1001 = USB-JTAG (S3, C3, C6, H2 - supports usb_reset)
-        const vendorId = $382e02c9bbd5d50b$var$deviceInfo?.usbVendorId;
-        const productId = $382e02c9bbd5d50b$var$deviceInfo?.usbProductId;
-        let resetMode = "default_reset";
-        if (vendorId === 0x303a) {
-            if (productId === 0x0002) {
-                // ESP32-S2 USB-OTG - no hardware reset support
-                resetMode = "no_reset";
-                $382e02c9bbd5d50b$var$term.writeln("ESP32-S2 USB-OTG detected - manual boot mode required");
-            } else {
-                // USB-JTAG devices (S3, C3, C6, H2)
-                resetMode = "usb_reset";
-                $382e02c9bbd5d50b$var$term.writeln("USB-JTAG detected - using USB reset sequence");
-            }
-        }
-        $382e02c9bbd5d50b$var$chip = await $382e02c9bbd5d50b$var$esploader.main(resetMode);
+        // Let the ESPLoader library handle reset mode detection internally
+        // It has built-in support for USB-OTG (S2) and USB-JTAG (S3/C3/C6)
+        $382e02c9bbd5d50b$var$chip = await $382e02c9bbd5d50b$var$esploader.main();
         // eslint-disable-next-line no-console
         console.log("Settings done for: " + $382e02c9bbd5d50b$var$chip);
         // Update UI to show programming section
@@ -8978,4 +8962,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.2b488138.js.map
+//# sourceMappingURL=typescript.5729f90a.js.map
