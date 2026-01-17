@@ -167,13 +167,24 @@ connectButton.onclick = async () => {
 
     esploader = new ESPLoader(flashOptions);
 
-    // ESP32-S2/S3 native USB CDC (VendorID 0x303a) doesn't support DTR/RTS signals
-    // Use "no_reset" mode - device must already be in bootloader mode manually
-    const isNativeUSB = deviceInfo?.usbVendorId === 0x303a;
-    const resetMode = isNativeUSB ? "no_reset" : "default_reset";
+    // Determine reset mode based on USB device type
+    // VendorID 0x303a = Espressif native USB
+    // ProductID 0x0002 = ESP32-S2 USB-OTG (no DTR/RTS, needs manual boot)
+    // ProductID 0x1001 = USB-JTAG (S3, C3, C6, H2 - supports usb_reset)
+    const vendorId = deviceInfo?.usbVendorId;
+    const productId = deviceInfo?.usbProductId;
 
-    if (isNativeUSB) {
-      term.writeln("Native USB detected - using manual boot mode (no auto-reset)");
+    let resetMode = "default_reset";
+    if (vendorId === 0x303a) {
+      if (productId === 0x0002) {
+        // ESP32-S2 USB-OTG - no hardware reset support
+        resetMode = "no_reset";
+        term.writeln("ESP32-S2 USB-OTG detected - manual boot mode required");
+      } else {
+        // USB-JTAG devices (S3, C3, C6, H2)
+        resetMode = "usb_reset";
+        term.writeln("USB-JTAG detected - using USB reset sequence");
+      }
     }
 
     chip = await esploader.main(resetMode);
