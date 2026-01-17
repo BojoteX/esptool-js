@@ -166,7 +166,17 @@ connectButton.onclick = async () => {
     } as LoaderOptions;
 
     esploader = new ESPLoader(flashOptions);
-    chip = await esploader.main();
+
+    // ESP32-S2/S3 native USB CDC (VendorID 0x303a) doesn't support DTR/RTS signals
+    // Use "no_reset" mode - device must already be in bootloader mode manually
+    const isNativeUSB = deviceInfo?.usbVendorId === 0x303a;
+    const resetMode = isNativeUSB ? "no_reset" : "default_reset";
+
+    if (isNativeUSB) {
+      term.writeln("Native USB detected - using manual boot mode (no auto-reset)");
+    }
+
+    chip = await esploader.main(resetMode);
 
     // eslint-disable-next-line no-console
     console.log("Settings done for: " + chip);

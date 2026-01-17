@@ -8757,7 +8757,12 @@ $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
             debugLogging: $382e02c9bbd5d50b$var$debugLogging.checked
         };
         $382e02c9bbd5d50b$var$esploader = new (0, $2a692e77237d8889$export$b0f7a6c745790308)(flashOptions);
-        $382e02c9bbd5d50b$var$chip = await $382e02c9bbd5d50b$var$esploader.main();
+        // ESP32-S2/S3 native USB CDC (VendorID 0x303a) doesn't support DTR/RTS signals
+        // Use "no_reset" mode - device must already be in bootloader mode manually
+        const isNativeUSB = $382e02c9bbd5d50b$var$deviceInfo?.usbVendorId === 0x303a;
+        const resetMode = isNativeUSB ? "no_reset" : "default_reset";
+        if (isNativeUSB) $382e02c9bbd5d50b$var$term.writeln("Native USB detected - using manual boot mode (no auto-reset)");
+        $382e02c9bbd5d50b$var$chip = await $382e02c9bbd5d50b$var$esploader.main(resetMode);
         // eslint-disable-next-line no-console
         console.log("Settings done for: " + $382e02c9bbd5d50b$var$chip);
         // Update UI to show programming section
@@ -8960,4 +8965,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.d4ef0e90.js.map
+//# sourceMappingURL=typescript.594c751e.js.map
