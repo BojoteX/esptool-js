@@ -8739,6 +8739,9 @@ $382e02c9bbd5d50b$var$modalCloseBtn.onclick = ()=>{
     $382e02c9bbd5d50b$var$successModal.classList.remove("show");
 };
 $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
+    // Show terminal immediately so users can see connection progress/errors
+    $382e02c9bbd5d50b$var$terminalContainer.style.display = "block";
+    $382e02c9bbd5d50b$var$term.clear();
     try {
         if ($382e02c9bbd5d50b$var$device === null) {
             $382e02c9bbd5d50b$var$device = await $382e02c9bbd5d50b$var$serialLib.requestPort({
@@ -8760,12 +8763,18 @@ $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
         // Update UI to show programming section
         $382e02c9bbd5d50b$var$connectSection.style.display = "none";
         $382e02c9bbd5d50b$var$programSection.style.display = "block";
-        $382e02c9bbd5d50b$var$terminalContainer.style.display = "block";
         $382e02c9bbd5d50b$var$lblConnTo.innerHTML = $382e02c9bbd5d50b$var$chip;
     } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
-        $382e02c9bbd5d50b$var$term.writeln(`Error: ${e.message}`);
+        $382e02c9bbd5d50b$var$term.writeln(`\n\x1b[31mError: ${e.message}\x1b[0m`);
+        $382e02c9bbd5d50b$var$term.writeln("\nConnection failed. Please try again:");
+        $382e02c9bbd5d50b$var$term.writeln("1. Make sure device is in boot mode (hold BOOT, plug USB, release)");
+        $382e02c9bbd5d50b$var$term.writeln("2. Try a different USB cable");
+        $382e02c9bbd5d50b$var$term.writeln("3. Check if another app is using the port");
+        // Reset device state so user can try again
+        $382e02c9bbd5d50b$var$device = null;
+        $382e02c9bbd5d50b$var$transport = null;
     }
 };
 $382e02c9bbd5d50b$var$traceButton.onclick = async ()=>{
@@ -8951,4 +8960,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.c138c922.js.map
+//# sourceMappingURL=typescript.d4ef0e90.js.map

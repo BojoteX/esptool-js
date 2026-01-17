@@ -147,6 +147,10 @@ modalCloseBtn.onclick = () => {
 };
 
 connectButton.onclick = async () => {
+  // Show terminal immediately so users can see connection progress/errors
+  terminalContainer.style.display = "block";
+  term.clear();
+
   try {
     if (device === null) {
       device = await serialLib.requestPort({ filters: espPortFilters });
@@ -170,13 +174,20 @@ connectButton.onclick = async () => {
     // Update UI to show programming section
     connectSection.style.display = "none";
     programSection.style.display = "block";
-    terminalContainer.style.display = "block";
     lblConnTo.innerHTML = chip;
 
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
-    term.writeln(`Error: ${e.message}`);
+    term.writeln(`\n\x1b[31mError: ${e.message}\x1b[0m`);
+    term.writeln("\nConnection failed. Please try again:");
+    term.writeln("1. Make sure device is in boot mode (hold BOOT, plug USB, release)");
+    term.writeln("2. Try a different USB cable");
+    term.writeln("3. Check if another app is using the port");
+
+    // Reset device state so user can try again
+    device = null;
+    transport = null;
   }
 };
 
