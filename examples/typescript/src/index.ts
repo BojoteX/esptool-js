@@ -60,14 +60,6 @@ import { serial } from "web-serial-polyfill";
 
 const serialLib = !navigator.serial && navigator.usb ? serial : navigator.serial;
 
-// USB Vendor IDs for ESP32 compatible devices
-const espPortFilters = [
-  { usbVendorId: 0x303a },  // Espressif native USB (ESP32-S2, S3, C3, C6, etc.)
-  { usbVendorId: 0x10c4 },  // Silicon Labs CP210x
-  { usbVendorId: 0x1a86 },  // WCH CH340/CH341
-  { usbVendorId: 0x0403 },  // FTDI FT232
-];
-
 declare let Terminal; // Terminal is imported in HTML script
 declare let CryptoJS; // CryptoJS is imported in HTML script
 
@@ -152,7 +144,7 @@ connectButton.onclick = async () => {
 
   try {
     if (device === null) {
-      device = await serialLib.requestPort({ filters: espPortFilters });
+      device = await serialLib.requestPort({});
       deviceInfo = device.getInfo();
       transport = new Transport(device, true);
     }
@@ -314,7 +306,7 @@ const sleep = async (ms: number) => {
 
 consoleStartButton.onclick = async () => {
   if (device === null) {
-    device = await serialLib.requestPort({ filters: espPortFilters });
+    device = await serialLib.requestPort({});
     transport = new Transport(device, true);
     deviceInfo = device.getInfo();
 
