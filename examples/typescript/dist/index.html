@@ -487,6 +487,27 @@ progress::-moz-progress-bar {
   display: block;
 }
 
+#terminal {
+  background: var(--bg-primary);
+  box-sizing: border-box;
+  border-radius: 4px;
+  max-width: 100%;
+  padding: 1rem;
+  overflow: auto hidden;
+}
+
+#terminal .xterm {
+  max-width: 100%;
+}
+
+#terminal .xterm-viewport {
+  overflow-y: auto !important;
+}
+
+#terminal .xterm-screen {
+  max-width: 100%;
+}
+
 .header-actions {
   align-items: center;
   gap: .75rem;
