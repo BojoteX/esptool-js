@@ -8741,7 +8741,6 @@ $382e02c9bbd5d50b$var$modalCloseBtn.onclick = ()=>{
 $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
     // Show terminal immediately so users can see connection progress/errors
     $382e02c9bbd5d50b$var$terminalContainer.style.display = "block";
-    $382e02c9bbd5d50b$var$term.clear();
     try {
         if ($382e02c9bbd5d50b$var$device === null) {
             $382e02c9bbd5d50b$var$device = await $382e02c9bbd5d50b$var$serialLib.requestPort({
@@ -8757,8 +8756,6 @@ $382e02c9bbd5d50b$var$connectButton.onclick = async ()=>{
             debugLogging: $382e02c9bbd5d50b$var$debugLogging.checked
         };
         $382e02c9bbd5d50b$var$esploader = new (0, $2a692e77237d8889$export$b0f7a6c745790308)(flashOptions);
-        // Let the ESPLoader library handle reset mode detection internally
-        // It has built-in support for USB-OTG (S2) and USB-JTAG (S3/C3/C6)
         $382e02c9bbd5d50b$var$chip = await $382e02c9bbd5d50b$var$esploader.main();
         // eslint-disable-next-line no-console
         console.log("Settings done for: " + $382e02c9bbd5d50b$var$chip);
@@ -8962,4 +8959,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.5729f90a.js.map
+//# sourceMappingURL=typescript.2a397426.js.map

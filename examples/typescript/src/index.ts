@@ -149,7 +149,6 @@ modalCloseBtn.onclick = () => {
 connectButton.onclick = async () => {
   // Show terminal immediately so users can see connection progress/errors
   terminalContainer.style.display = "block";
-  term.clear();
 
   try {
     if (device === null) {
@@ -166,9 +165,6 @@ connectButton.onclick = async () => {
     } as LoaderOptions;
 
     esploader = new ESPLoader(flashOptions);
-
-    // Let the ESPLoader library handle reset mode detection internally
-    // It has built-in support for USB-OTG (S2) and USB-JTAG (S3/C3/C6)
     chip = await esploader.main();
 
     // eslint-disable-next-line no-console
