@@ -8666,8 +8666,8 @@ let $382e02c9bbd5d50b$var$consoleLog = "";
 let $382e02c9bbd5d50b$var$selectedFilename = "";
 const $382e02c9bbd5d50b$var$serialLib = !navigator.serial && navigator.usb ? (0, $d2bbb828b377f05f$export$6c2c9a00e27c07e8) : navigator.serial;
 const $382e02c9bbd5d50b$var$term = new Terminal({
-    cols: 120,
-    rows: 40
+    cols: 80,
+    rows: 24
 });
 $382e02c9bbd5d50b$var$term.open($382e02c9bbd5d50b$var$terminal);
 let $382e02c9bbd5d50b$var$device = null;
@@ -8949,4 +8949,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.086c52eb.js.map
+//# sourceMappingURL=typescript.3621a565.js.map

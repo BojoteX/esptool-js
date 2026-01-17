@@ -489,23 +489,9 @@ progress::-moz-progress-bar {
 
 #terminal {
   background: var(--bg-primary);
-  box-sizing: border-box;
   border-radius: 4px;
-  max-width: 100%;
   padding: 1rem;
-  overflow: auto hidden;
-}
-
-#terminal .xterm {
-  max-width: 100%;
-}
-
-#terminal .xterm-viewport {
-  overflow-y: auto !important;
-}
-
-#terminal .xterm-screen {
-  max-width: 100%;
+  overflow: hidden;
 }
 
 .header-actions {
@@ -810,7 +796,7 @@ footer a:hover {
         <button id="resetButton"></button>
     </div>
 
-    <script src="typescript.086c52eb.js" type="module"></script>
+    <script src="typescript.3621a565.js" type="module"></script>
     <script>// Safari detection
 var isSafari = /constructor/i.test(window.HTMLElement) || function(p) {
     return p.toString() === "[object SafariRemoteNotification]";
