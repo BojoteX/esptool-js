@@ -438,12 +438,17 @@ class Transport {
    * @param {boolean} state Boolean state to set the signal
    */
   async setRTS(state: boolean) {
-    await this.device.setSignals({ requestToSend: state });
-    // # Work-around for adapters on Windows using the usbser.sys driver:
-    // # generate a dummy change to DTR so that the set-control-line-state
-    // # request is sent with the updated RTS state and the same DTR state
-    // Referenced to esptool.py
-    await this.setDTR(this._DTR_state);
+    try {
+      await this.device.setSignals({ requestToSend: state });
+      // # Work-around for adapters on Windows using the usbser.sys driver:
+      // # generate a dummy change to DTR so that the set-control-line-state
+      // # request is sent with the updated RTS state and the same DTR state
+      // Referenced to esptool.py
+      await this.setDTR(this._DTR_state);
+    } catch {
+      // Some USB CDC devices (like ESP32-S2 USB-OTG) don't support control signals
+      // Silently ignore the error - device may already be in bootloader mode
+    }
   }
 
   /**
@@ -453,7 +458,12 @@ class Transport {
    */
   async setDTR(state: boolean) {
     this._DTR_state = state;
-    await this.device.setSignals({ dataTerminalReady: state });
+    try {
+      await this.device.setSignals({ dataTerminalReady: state });
+    } catch {
+      // Some USB CDC devices (like ESP32-S2 USB-OTG) don't support control signals
+      // Silently ignore the error - device may already be in bootloader mode
+    }
   }
 
   /**

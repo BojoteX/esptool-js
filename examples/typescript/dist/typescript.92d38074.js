@@ -5879,14 +5879,19 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
      * # True for EN=LOW, chip in reset and False EN=HIGH, chip out of reset
      * @param {boolean} state Boolean state to set the signal
      */ async setRTS(state) {
-        await this.device.setSignals({
-            requestToSend: state
-        });
-        // # Work-around for adapters on Windows using the usbser.sys driver:
-        // # generate a dummy change to DTR so that the set-control-line-state
-        // # request is sent with the updated RTS state and the same DTR state
-        // Referenced to esptool.py
-        await this.setDTR(this._DTR_state);
+        try {
+            await this.device.setSignals({
+                requestToSend: state
+            });
+            // # Work-around for adapters on Windows using the usbser.sys driver:
+            // # generate a dummy change to DTR so that the set-control-line-state
+            // # request is sent with the updated RTS state and the same DTR state
+            // Referenced to esptool.py
+            await this.setDTR(this._DTR_state);
+        } catch  {
+        // Some USB CDC devices (like ESP32-S2 USB-OTG) don't support control signals
+        // Silently ignore the error - device may already be in bootloader mode
+        }
     }
     /**
      * Send the dataTerminalReady (DTS) signal to given state
@@ -5894,9 +5899,14 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
      * @param {boolean} state Boolean state to set the signal
      */ async setDTR(state) {
         this._DTR_state = state;
-        await this.device.setSignals({
-            dataTerminalReady: state
-        });
+        try {
+            await this.device.setSignals({
+                dataTerminalReady: state
+            });
+        } catch  {
+        // Some USB CDC devices (like ESP32-S2 USB-OTG) don't support control signals
+        // Silently ignore the error - device may already be in bootloader mode
+        }
     }
     /**
      * Connect to serial device using the Webserial open method.
@@ -8940,4 +8950,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.da2c6d40.js.map
+//# sourceMappingURL=typescript.92d38074.js.map
