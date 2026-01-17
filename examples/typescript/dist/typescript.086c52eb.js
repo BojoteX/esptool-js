@@ -5582,6 +5582,38 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
 
 
 /* global SerialPort, ParityType, FlowControlType */ /**
+ * Pad to the next alignment boundary
+ * @param {Uint8Array} data Uint8Array data to pad
+ * @param {number} alignment Alignment boundary to fulfill
+ * @param {number} padCharacter Character to fill with
+ * @returns {Uint8Array} Padded UInt8Array image
+ */ function $a3e65f1d2f419d9f$export$fcbe1efa6919329(data, alignment, padCharacter = 0xff) {
+    const padMod = data.length % alignment;
+    if (padMod !== 0) {
+        const padding = new Uint8Array(alignment - padMod).fill(padCharacter);
+        const paddedData = new Uint8Array(data.length + padding.length);
+        paddedData.set(data);
+        paddedData.set(padding, data.length);
+        return paddedData;
+    }
+    return data;
+}
+const $a3e65f1d2f419d9f$export$afcb79357d459880 = 0xef;
+function $a3e65f1d2f419d9f$export$bd4137bcc5170a90(data, state = $a3e65f1d2f419d9f$export$afcb79357d459880) {
+    for(let i = 0; i < data.length; i++)state ^= data[i];
+    return state;
+}
+function $a3e65f1d2f419d9f$export$f3be784ddd918f3a(bStr) {
+    const u8Array = new Uint8Array(bStr.length);
+    for(let i = 0; i < bStr.length; i++)u8Array[i] = bStr.charCodeAt(i);
+    return u8Array;
+}
+function $a3e65f1d2f419d9f$export$e772c8ff12451969(ms) {
+    return new Promise((resolve)=>setTimeout(resolve, ms));
+}
+
+
+/**
  * Wrapper class around Webserial API to communicate with the serial device.
  * @param {typeof import("w3c-web-serial").SerialPort} device - Requested device prompted by the browser.
  *
@@ -5703,57 +5735,58 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
         combined.set(arr2, arr1.length);
         return combined;
     }
-    // Asynchronous generator to yield incoming data chunks
-    async *readLoop(timeout) {
-        if (!this.reader) return;
-        try {
-            while(true){
-                const timeoutPromise = new Promise((_, reject)=>setTimeout(()=>reject(new Error("Read timeout exceeded")), timeout));
-                // Await the race between the timeout and the reader read
-                const result = await Promise.race([
-                    this.reader.read(),
-                    timeoutPromise
-                ]);
-                // If a timeout occurs, result will be null; otherwise, it will have { value, done }
-                if (result === null) break;
-                const { value: value, done: done } = result;
-                if (done || !value) break;
-                yield value; // Yield each data chunk
+    /**
+     * Read from serial device and append to buffer
+     */ async readLoop() {
+        var _a;
+        while(this.device.readable){
+            this.reader = (_a = this.device.readable) === null || _a === void 0 ? void 0 : _a.getReader();
+            try {
+                const { value: value, done: done } = await this.reader.read();
+                if (done) {
+                    this.trace(`Serial port done`);
+                    break;
+                }
+                // The following test is purely precautionary because .read()
+                // is not supposed to return empty data when done is false
+                if (value && value.length) {
+                    const newValue = Uint8Array.from(value);
+                    this.buffer = this.appendArray(this.buffer, newValue);
+                }
+            } catch (error) {
+                if (error instanceof Error) {
+                    // Read retry is possible for the following errors
+                    const nonFatal = [
+                        "BufferOverrunError",
+                        "FramingError",
+                        "BreakError",
+                        "ParityError"
+                    ];
+                    if (nonFatal.includes(error.name)) {
+                        this.trace(`Recoverable serial port error: ${error.message}`);
+                        continue;
+                    }
+                    // Otherwise the read loop cannot continue
+                    this.trace(`Unrecoverable serial port error: ${error.message}`);
+                    break;
+                }
+                if (error instanceof DOMException) {
+                    // The read loop cannot continue after a DOMException error
+                    if (this.onDeviceLostCallback) this.onDeviceLostCallback();
+                    else this.trace(`Unrecoverable serial port error: ${error.message}`);
+                    break;
+                }
+                // The read loop cannot continue after an error whose class is unknown
+                this.trace(`Unrecoverable serial port error: ${error}`);
+                break;
+            } finally{
+                this.reader.releaseLock();
             }
-        } catch (error) {
-            console.error("Error reading from serial port:", error);
-        } finally{
-            this.buffer = new Uint8Array(0);
         }
+        // Fatal error or serial port stream ended
+        this.trace(`readLoop exited`);
     }
-    // Read a specific number of bytes
-    async newRead(numBytes, timeout) {
-        if (this.buffer.length >= numBytes) {
-            const output = this.buffer.slice(0, numBytes);
-            this.buffer = this.buffer.slice(numBytes); // Remove the returned data from buffer
-            return output;
-        }
-        while(this.buffer.length < numBytes){
-            const readLoop = this.readLoop(timeout);
-            const { value: value, done: done } = await readLoop.next();
-            if (done || !value) break;
-            // Append the newly read data to the buffer
-            this.buffer = this.appendArray(this.buffer, value);
-        }
-        // Return as much data as possible
-        const output = this.buffer.slice(0, numBytes);
-        this.buffer = this.buffer.slice(numBytes);
-        return output;
-    }
-    async flushInput() {
-        var _a, _b, _c;
-        try {
-            if (!this.reader) this.reader = (_a = this.device.readable) === null || _a === void 0 ? void 0 : _a.getReader();
-            await ((_b = this.reader) === null || _b === void 0 ? void 0 : _b.cancel());
-            this.reader = (_c = this.device.readable) === null || _c === void 0 ? void 0 : _c.getReader();
-        } catch (error) {
-            this.trace(`Error while flushing input: ${error}`);
-        }
+    flushInput() {
         this.buffer = new Uint8Array(0);
     }
     async flushOutput() {
@@ -5770,6 +5803,10 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
     // `inWaiting` returns the count of bytes in the buffer
     inWaiting() {
         return this.buffer.length;
+    }
+    // peek at the buffer without removing the data from the buffer
+    peek() {
+        return this.buffer;
     }
     /**
      * Detect if the data read from device is a Fatal or Guru meditation error.
@@ -5789,30 +5826,35 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
      * Take a data array and return the first well formed packet after
      * replacing the escape sequence. Reads at least 8 bytes.
      * @param {number} timeout Timeout read data.
-     * @yields {Uint8Array} Formatted packet using SLIP escape sequences.
-     */ async *read(timeout) {
-        var _a;
-        if (!this.reader) this.reader = (_a = this.device.readable) === null || _a === void 0 ? void 0 : _a.getReader();
+     * @returns {Uint8Array} Formatted packet using SLIP escape sequences.
+     */ async read(timeout) {
         let partialPacket = null;
         let isEscaping = false;
-        let successfulSlip = false;
+        let readBytes = null;
+        // eslint-disable-next-line no-constant-condition
         while(true){
-            const waitingBytes = this.inWaiting();
-            const readBytes = await this.newRead(waitingBytes > 0 ? waitingBytes : 1, timeout);
+            const timeStamp = Date.now();
+            readBytes = new Uint8Array(0);
+            // Wait for data to be available, but read all available bytes at once
+            while(Date.now() - timeStamp < timeout)if (this.buffer.length > 0) {
+                // Read all available bytes at once instead of one at a time
+                readBytes = this.buffer;
+                this.buffer = new Uint8Array(0);
+                break;
+            } else await (0, $a3e65f1d2f419d9f$export$e772c8ff12451969)(1);
             if (!readBytes || readBytes.length === 0) {
-                const msg = partialPacket === null ? successfulSlip ? "Serial data stream stopped: Possible serial noise or corruption." : "No serial data received." : `Packet content transfer stopped`;
+                const msg = partialPacket === null ? "Serial data stream stopped: Possible serial noise or corruption." : "No serial data received.";
                 if (this.tracing) this.trace(msg);
                 throw new Error(msg);
             }
             if (this.tracing) this.trace(`Read ${readBytes.length} bytes: ${this.hexConvert(readBytes)}`);
-            let i = 0; // Track position in readBytes
-            while(i < readBytes.length){
-                const byte = readBytes[i++];
+            for(let i = 0; i < readBytes.length; i++){
+                const byte = readBytes[i];
                 if (partialPacket === null) {
                     if (byte === this.SLIP_END) partialPacket = new Uint8Array(0); // Start of a new packet
                     else {
                         if (this.tracing) this.trace(`Read invalid data: ${this.hexConvert(readBytes)}`);
-                        const remainingData = await this.newRead(this.inWaiting(), timeout);
+                        const remainingData = this.buffer;
                         if (this.tracing) this.trace(`Remaining data in serial buffer: ${this.hexConvert(remainingData)}`);
                         this.detectPanicHandler(new Uint8Array([
                             ...readBytes,
@@ -5830,7 +5872,7 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
                     ]));
                     else {
                         if (this.tracing) this.trace(`Read invalid data: ${this.hexConvert(readBytes)}`);
-                        const remainingData = await this.newRead(this.inWaiting(), timeout);
+                        const remainingData = this.buffer;
                         if (this.tracing) this.trace(`Remaining data in serial buffer: ${this.hexConvert(remainingData)}`);
                         this.detectPanicHandler(new Uint8Array([
                             ...readBytes,
@@ -5841,10 +5883,12 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
                 } else if (byte === this.SLIP_ESC) isEscaping = true;
                 else if (byte === this.SLIP_END) {
                     if (this.tracing) this.trace(`Received full packet: ${this.hexConvert(partialPacket)}`);
-                    this.buffer = this.appendArray(this.buffer, readBytes.slice(i));
-                    yield partialPacket;
-                    partialPacket = null;
-                    successfulSlip = true;
+                    // Put any remaining bytes after SLIP_END back into the buffer
+                    if (i + 1 < readBytes.length) {
+                        const remainingBytes = readBytes.slice(i + 1);
+                        this.buffer = this.appendArray(remainingBytes, this.buffer);
+                    }
+                    return partialPacket;
                 } else partialPacket = this.appendArray(partialPacket, new Uint8Array([
                     byte
                 ]));
@@ -5852,26 +5896,24 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
         }
     }
     /**
-     * Read from serial device without slip formatting.
-     * @yields {Uint8Array} The next number in the Fibonacci sequence.
-     */ async *rawRead() {
-        if (!this.reader) return;
+     * Read from serial device without slip formatting using the buffer populated by readLoop.
+     * @returns {Promise<Uint8Array>} Data from the serial buffer. Returns empty array if reader has stopped and buffer is empty.
+     */ async rawRead() {
         try {
-            while(true){
-                const { value: value, done: done } = await this.reader.read();
-                if (done || !value) break;
-                if (this.tracing) this.trace(`Read ${value.length} bytes: ${this.hexConvert(value)}`);
-                yield value; // Yield each data chunk
-            }
+            if (!this.reader || this.buffer.length === 0) return new Uint8Array(0);
+            const data = this.buffer;
+            this.buffer = new Uint8Array(0);
+            if (this.tracing) this.trace(`Read ${data.length} bytes: ${this.hexConvert(data)}`);
+            return data;
         } catch (error) {
-            console.error("Error reading from serial port:", error);
+            this.trace(`Error reading from serial port: ${error}`);
             // Check if it's a NetworkError indicating device loss
             if (error instanceof Error && error.name === "NetworkError" && error.message.includes("device has been lost")) {
                 this.trace("Device lost detected (NetworkError)");
                 if (this.onDeviceLostCallback) this.onDeviceLostCallback();
             }
-        } finally{
-            this.buffer = new Uint8Array(0);
+            // Return empty array on error to allow graceful exit
+            return new Uint8Array(0);
         }
     }
     /**
@@ -5890,7 +5932,6 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
             await this.setDTR(this._DTR_state);
         } catch  {
         // Some USB CDC devices (like ESP32-S2 USB-OTG) don't support control signals
-        // Silently ignore the error - device may already be in bootloader mode
         }
     }
     /**
@@ -5905,7 +5946,6 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
             });
         } catch  {
         // Some USB CDC devices (like ESP32-S2 USB-OTG) don't support control signals
-        // Silently ignore the error - device may already be in bootloader mode
         }
     }
     /**
@@ -5913,7 +5953,6 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
      * @param {number} baud Number baud rate for serial connection. Default is 115200.
      * @param {typeof import("w3c-web-serial").SerialOptions} serialOptions Serial Options for WebUSB SerialPort class.
      */ async connect(baud = 115200, serialOptions = {}) {
-        var _a;
         await this.device.open({
             baudRate: baud,
             dataBits: serialOptions === null || serialOptions === void 0 ? void 0 : serialOptions.dataBits,
@@ -5923,16 +5962,13 @@ var $5f5efb44a28764f6$export$2e2bcd8739ae039 = {
             flowControl: serialOptions === null || serialOptions === void 0 ? void 0 : serialOptions.flowControl
         });
         this.baudrate = baud;
-        this.reader = (_a = this.device.readable) === null || _a === void 0 ? void 0 : _a.getReader();
-    }
-    async sleep(ms) {
-        return new Promise((resolve)=>setTimeout(resolve, ms));
+        this.readLoop();
     }
     /**
      * Wait for a given timeout ms for serial device unlock.
      * @param {number} timeout Timeout time in milliseconds (ms) to sleep
      */ async waitForUnlock(timeout) {
-        while(this.device.readable && this.device.readable.locked || this.device.writable && this.device.writable.locked)await this.sleep(timeout);
+        while(this.device.readable && this.device.readable.locked || this.device.writable && this.device.writable.locked)await (0, $a3e65f1d2f419d9f$export$e772c8ff12451969)(timeout);
     }
     /**
      * Disconnect from serial device by running SerialPort.close() after streams unlock.
@@ -6136,34 +6172,6 @@ function $6349e20ae937198d$export$7e57cd56df6c9bb5(dataStr) {
     return new Uint8Array(chardata);
 }
 
-
-/**
- * Pad to the next alignment boundary
- * @param {Uint8Array} data Uint8Array data to pad
- * @param {number} alignment Alignment boundary to fulfill
- * @param {number} padCharacter Character to fill with
- * @returns {Uint8Array} Padded UInt8Array image
- */ function $a3e65f1d2f419d9f$export$fcbe1efa6919329(data, alignment, padCharacter = 0xff) {
-    const padMod = data.length % alignment;
-    if (padMod !== 0) {
-        const padding = new Uint8Array(alignment - padMod).fill(padCharacter);
-        const paddedData = new Uint8Array(data.length + padding.length);
-        paddedData.set(data);
-        paddedData.set(padding, data.length);
-        return paddedData;
-    }
-    return data;
-}
-const $a3e65f1d2f419d9f$export$afcb79357d459880 = 0xef;
-function $a3e65f1d2f419d9f$export$bd4137bcc5170a90(data, state = $a3e65f1d2f419d9f$export$afcb79357d459880) {
-    for(let i = 0; i < data.length; i++)state ^= data[i];
-    return state;
-}
-function $a3e65f1d2f419d9f$export$f3be784ddd918f3a(bStr) {
-    const u8Array = new Uint8Array(bStr.length);
-    for(let i = 0; i < bStr.length; i++)u8Array[i] = bStr.charCodeAt(i);
-    return u8Array;
-}
 
 
 
@@ -7086,9 +7094,6 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
         this.info("esptool.js");
         this.info("Serial port " + this.transport.getInfo());
     }
-    _sleep(ms) {
-        return new Promise((resolve)=>setTimeout(resolve, ms));
-    }
     /**
      * Write to ESP Loader constructor's terminal with or without new line.
      * @param {string} str - String to write.
@@ -7202,15 +7207,6 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
         return u8Array;
     }
     /**
-     * Flush the serial input by raw read with 200 ms timeout.
-     */ async flushInput() {
-        try {
-            await this.transport.flushInput();
-        } catch (e) {
-            this.error(e.message);
-        }
-    }
-    /**
      * Use the device serial port read function with given timeout to create a valid packet.
      * @param {number} op Operation number
      * @param {number} timeout timeout number in milliseconds
@@ -7218,7 +7214,7 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
      */ async readPacket(op = null, timeout = this.DEFAULT_TIMEOUT) {
         // Check up-to next 100 packets for valid response packet
         for(let i = 0; i < 100; i++){
-            const { value: p } = await this.transport.read(timeout).next();
+            const p = await this.transport.read(timeout);
             if (!p || p.length < 8) continue;
             const resp = p[0];
             if (resp !== 1) continue;
@@ -7231,7 +7227,7 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
                     data
                 ];
                 else if (data[0] != 0 && data[1] == this.ROM_INVALID_RECV_MSG) {
-                    await this.flushInput();
+                    this.transport.flushInput();
                     throw new (0, $d6c8b0dd9044fd6d$export$5b519f82636185ec)("unsupported command error");
                 }
             }
@@ -7274,8 +7270,10 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
      * @param {number} timeout - Timeout in milliseconds (Default: 3000ms)
      * @returns {number} - Command number value
      */ async readReg(addr, timeout = this.DEFAULT_TIMEOUT) {
+        this.debug(`Read Register:${this.toHex(addr)}`);
         const pkt = this._intToByteArray(addr);
         const val = await this.command(this.ESP_READ_REG, pkt, undefined, undefined, timeout);
+        this.debug(`Read Register Value:${val[0]}`);
         return val[0];
     }
     /**
@@ -7316,7 +7314,7 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
             // reset properly and esptool is talking to the flasher stub.
             this.syncStubDetected = resp[0] === 0;
             for(let i = 0; i < 7; i++){
-                resp = await this.command();
+                resp = await this.readPacket(0x08, 100);
                 this.syncStubDetected = this.syncStubDetected && resp[0] === 0;
             }
             return resp;
@@ -7333,10 +7331,9 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
      */ async _connectAttempt(mode = "default_reset", resetStrategy) {
         this.debug("_connect_attempt " + mode);
         if (resetStrategy) await resetStrategy.reset();
-        const waitingBytes = this.transport.inWaiting();
-        const readBytes = await this.transport.newRead(waitingBytes > 0 ? waitingBytes : 1, this.DEFAULT_TIMEOUT);
+        const readBytes = this.transport.peek();
         const binaryString = Array.from(readBytes, (byte)=>String.fromCharCode(byte)).join("");
-        const regex = /boot:(0x[0-9a-fA-F]+)(.*waiting for download)?/;
+        const regex = /boot:(0x[0-9a-fA-F]+)([\s\S]*?waiting for download)?/;
         const match = binaryString.match(regex);
         let bootLogDetected = false, bootMode = "", downloadMode = false;
         if (match) {
@@ -7344,9 +7341,11 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
             bootMode = match[1];
             downloadMode = !!match[2];
         }
+        this.debug(`bootMode:${bootMode} downloadMode:${downloadMode}`);
         let lastError = "";
         for(let i = 0; i < 5; i++)try {
             this.debug(`Sync connect attempt ${i}`);
+            this.transport.flushInput();
             const resp = await this.sync();
             this.debug(resp[0].toString());
             return "success";
@@ -7792,7 +7791,7 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
         if (res != 0) throw new (0, $d6c8b0dd9044fd6d$export$5b519f82636185ec)("Failed to read memory: " + res);
         let resp = new Uint8Array(0);
         while(resp.length < size){
-            const { value: packet } = await this.transport.read(this.FLASH_READ_TIMEOUT).next();
+            const packet = await this.transport.read(this.FLASH_READ_TIMEOUT);
             if (packet instanceof Uint8Array) {
                 if (packet.length > 0) {
                     resp = this._appendArray(resp, packet);
@@ -7835,7 +7834,7 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
         }
         this.info("Running stub...");
         await this.memFinish(stubFlasher.entry);
-        const { value: packetResult } = await this.transport.read(this.DEFAULT_TIMEOUT).next();
+        const packetResult = await this.transport.read(this.DEFAULT_TIMEOUT);
         const packetStr = String.fromCharCode(...packetResult);
         if (packetStr !== "OHAI") throw new (0, $d6c8b0dd9044fd6d$export$5b519f82636185ec)(`Failed to start stub. Unexpected response ${packetStr}`);
         this.info("Stub running...");
@@ -7851,11 +7850,11 @@ class $2a692e77237d8889$export$b0f7a6c745790308 {
         await this.command(this.ESP_CHANGE_BAUDRATE, pkt);
         this.info("Changed");
         this.info("If the chip does not respond to any further commands, consider using a lower baud rate.");
-        await this._sleep(50);
+        await (0, $a3e65f1d2f419d9f$export$e772c8ff12451969)(50);
         await this.transport.disconnect();
-        await this._sleep(50);
+        await (0, $a3e65f1d2f419d9f$export$e772c8ff12451969)(50);
         await this.transport.connect(this.baudrate, this.serialOptions);
-        await this._sleep(50);
+        await (0, $a3e65f1d2f419d9f$export$e772c8ff12451969)(50);
     }
     /**
      * Execute the main function of ESPLoader.
@@ -8950,4 +8949,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.92d38074.js.map
+//# sourceMappingURL=typescript.086c52eb.js.map

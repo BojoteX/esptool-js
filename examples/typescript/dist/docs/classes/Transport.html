@@ -28,7 +28,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">Transport</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:59</li></ul></aside>
+<li>Defined in webserial.ts:60</li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -68,15 +68,14 @@
 <a href="Transport.html#hexConvert" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>hex<wbr/>Convert</span></a>
 <a href="Transport.html#hexify" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>hexify</span></a>
 <a href="Transport.html#inWaiting" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>in<wbr/>Waiting</span></a>
-<a href="Transport.html#newRead" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>new<wbr/>Read</span></a>
+<a href="Transport.html#peek" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>peek</span></a>
 <a href="Transport.html#rawRead" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>raw<wbr/>Read</span></a>
 <a href="Transport.html#read" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read</span></a>
-<a href="Transport.html#readLoop" class="tsd-index-link tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read<wbr/>Loop</span></a>
+<a href="Transport.html#readLoop" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read<wbr/>Loop</span></a>
 <a href="Transport.html#returnTrace" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>return<wbr/>Trace</span></a>
 <a href="Transport.html#setDTR" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>setDTR</span></a>
 <a href="Transport.html#setDeviceLostCallback" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Device<wbr/>Lost<wbr/>Callback</span></a>
 <a href="Transport.html#setRTS" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>setRTS</span></a>
-<a href="Transport.html#sleep" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>sleep</span></a>
 <a href="Transport.html#slipWriter" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>slip<wbr/>Writer</span></a>
 <a href="Transport.html#trace" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>trace</span></a>
 <a href="Transport.html#updateDevice" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Device</span></a>
@@ -101,54 +100,54 @@
 <h5><span class="tsd-kind-parameter">enableSlipReader</span>: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Transport.html" class="tsd-signature-type tsd-kind-class">Transport</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:68</li></ul></aside></li></ul></section></section>
+<li>Defined in webserial.ts:69</li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="SLIP_END" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>SLIP_<wbr/>END</span><a href="#SLIP_END" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">SLIP_<wbr/>END</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0xc0</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:311</li></ul></aside></section>
+<li>Defined in webserial.ts:303</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="SLIP_ESC" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>SLIP_<wbr/>ESC</span><a href="#SLIP_ESC" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">SLIP_<wbr/>ESC</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0xdb</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:312</li></ul></aside></section>
+<li>Defined in webserial.ts:304</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="SLIP_ESC_END" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>SLIP_<wbr/>ESC_<wbr/>END</span><a href="#SLIP_ESC_END" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">SLIP_<wbr/>ESC_<wbr/>END</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0xdc</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:313</li></ul></aside></section>
+<li>Defined in webserial.ts:305</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="SLIP_ESC_ESC" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>SLIP_<wbr/>ESC_<wbr/>ESC</span><a href="#SLIP_ESC_ESC" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">SLIP_<wbr/>ESC_<wbr/>ESC</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0xdd</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:314</li></ul></aside></section>
+<li>Defined in webserial.ts:306</li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="_DTR_state" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>_DTR_<wbr/>state</span><a href="#_DTR_state" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">_DTR_<wbr/>state</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:434</li></ul></aside></section>
+<li>Defined in webserial.ts:433</li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="baudrate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>baudrate</span><a href="#baudrate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">baudrate</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:61</li></ul></aside></section>
+<li>Defined in webserial.ts:62</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="buffer" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>buffer</span><a href="#buffer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">buffer</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:65</li></ul></aside></section>
+<li>Defined in webserial.ts:66</li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="device" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>device</span><a href="#device" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">device</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type ">SerialPort</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:68</li></ul></aside></section>
+<li>Defined in webserial.ts:69</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="lastTraceTime" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>last<wbr/>Trace<wbr/>Time</span><a href="#lastTraceTime" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">last<wbr/>Trace<wbr/>Time</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:63</li></ul></aside></section>
+<li>Defined in webserial.ts:64</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="onDeviceLostCallback" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>on<wbr/>Device<wbr/>Lost<wbr/>Callback</span><a href="#onDeviceLostCallback" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">on<wbr/>Device<wbr/>Lost<wbr/>Callback</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> = null</span></div>
@@ -161,27 +160,27 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:66</li></ul></aside></section>
+<li>Defined in webserial.ts:67</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="reader" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>reader</span><a href="#reader" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">reader</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type ">ReadableStreamDefaultReader</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:64</li></ul></aside></section>
+<li>Defined in webserial.ts:65</li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="slipReaderEnabled" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>slip<wbr/>Reader<wbr/>Enabled</span><a href="#slipReaderEnabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">slip<wbr/>Reader<wbr/>Enabled</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:60</li></ul></aside></section>
+<li>Defined in webserial.ts:61</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="traceLog" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>trace<wbr/>Log</span><a href="#traceLog" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">trace<wbr/>Log</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;&quot;</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:62</li></ul></aside></section>
+<li>Defined in webserial.ts:63</li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="tracing" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>tracing</span><a href="#tracing" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tracing</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:68</li></ul></aside></section></section>
+<li>Defined in webserial.ts:69</li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="appendArray" class="tsd-anchor"></a>
@@ -208,7 +207,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:201</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:202</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="connect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>connect</span><a href="#connect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -232,7 +231,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:474</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:471</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-private"><a id="detectPanicHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>detect<wbr/>Panic<wbr/>Handler</span><a href="#detectPanicHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-private">
@@ -251,7 +250,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:297</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:289</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="disconnect" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>disconnect</span><a href="#disconnect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -262,15 +261,15 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:507</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:500</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="flushInput" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>flush<wbr/>Input</span><a href="#flushInput" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="flushInput.flushInput-1"><span class="tsd-kind-call-signature">flush<wbr/>Input</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#flushInput.flushInput-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="flushInput.flushInput-1"><span class="tsd-kind-call-signature">flush<wbr/>Input</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#flushInput.flushInput-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:263</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:259</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="flushOutput" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>flush<wbr/>Output</span><a href="#flushOutput" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -278,7 +277,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:276</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:263</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getInfo" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Info</span><a href="#getInfo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -290,7 +289,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:93</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:94</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getPid" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Pid</span><a href="#getPid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -302,7 +301,7 @@
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:104</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:105</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="hexConvert" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>hex<wbr/>Convert</span><a href="#hexConvert" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -317,7 +316,7 @@
 <h5><span class="tsd-kind-parameter">autoSplit</span>: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:136</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:137</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="hexify" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>hexify</span><a href="#hexify" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -330,7 +329,7 @@
 <h5><span class="tsd-kind-parameter">s</span>: <span class="tsd-signature-type ">Uint8Array</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:129</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:130</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="inWaiting" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>in<wbr/>Waiting</span><a href="#inWaiting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -338,39 +337,31 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:289</li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="newRead" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>new<wbr/>Read</span><a href="#newRead" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<li>Defined in webserial.ts:276</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="peek" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>peek</span><a href="#peek" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="newRead.newRead-1"><span class="tsd-kind-call-signature">new<wbr/>Read</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">numBytes</span>, <span class="tsd-kind-parameter">timeout</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span><a href="#newRead.newRead-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="peek.peek-1"><span class="tsd-kind-call-signature">peek</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Uint8Array</span><a href="#peek.peek-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">numBytes</span>: <span class="tsd-signature-type">number</span></h5></li>
-<li>
-<h5><span class="tsd-kind-parameter">timeout</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Uint8Array</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:238</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:281</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="rawRead" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>raw<wbr/>Read</span><a href="#rawRead" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="rawRead.rawRead-1"><span class="tsd-kind-call-signature">raw<wbr/>Read</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">AsyncGenerator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><a href="#rawRead.rawRead-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="rawRead.rawRead-1"><span class="tsd-kind-call-signature">raw<wbr/>Read</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span><a href="#rawRead.rawRead-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Read from serial device without slip formatting.</p>
+<div class="tsd-comment tsd-typography"><p>Read from serial device without slip formatting using the buffer populated by readLoop.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">AsyncGenerator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
-<div class="tsd-comment tsd-typography">
-<h4>Yields</h4><p>The next number in the Fibonacci sequence.</p>
-</div><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Data from the serial buffer. Returns empty array if reader has stopped and buffer is empty.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:407</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:404</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="read" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>read</span><a href="#read" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="read.read-1"><span class="tsd-kind-call-signature">read</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">timeout</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">AsyncGenerator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><a href="#read.read-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="read.read-1"><span class="tsd-kind-call-signature">read</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">timeout</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span><a href="#read.read-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Take a data array and return the first well formed packet after
 replacing the escape sequence. Reads at least 8 bytes.</p>
@@ -383,25 +374,22 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <div class="tsd-comment tsd-typography"><p>Timeout read data.</p>
 </div>
 <div class="tsd-comment tsd-typography"></div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">AsyncGenerator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
-<div class="tsd-comment tsd-typography">
-<h4>Yields</h4><p>Formatted packet using SLIP escape sequences.</p>
-</div><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">&gt;</span></h4><p>Formatted packet using SLIP escape sequences.</p>
+
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:322</li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-is-private"><a id="readLoop" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>read<wbr/>Loop</span><a href="#readLoop" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-is-private">
-<li class="tsd-signature tsd-anchor-link" id="readLoop.readLoop-1"><span class="tsd-kind-call-signature">read<wbr/>Loop</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">timeout</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">AsyncGenerator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><a href="#readLoop.readLoop-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li>Defined in webserial.ts:314</li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="readLoop" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>read<wbr/>Loop</span><a href="#readLoop" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="readLoop.readLoop-1"><span class="tsd-kind-call-signature">read<wbr/>Loop</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#readLoop.readLoop-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">timeout</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">AsyncGenerator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type ">Uint8Array</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<div class="tsd-comment tsd-typography"><p>Read from serial device and append to buffer</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:209</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:212</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="returnTrace" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>return<wbr/>Trace</span><a href="#returnTrace" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -409,7 +397,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:120</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:121</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setDTR" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>setDTR</span><a href="#setDTR" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -428,7 +416,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:459</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:457</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setDeviceLostCallback" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Device<wbr/>Lost<wbr/>Callback</span><a href="#setDeviceLostCallback" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -447,7 +435,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:76</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:77</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setRTS" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>setRTS</span><a href="#setRTS" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -466,20 +454,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:440</li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member"><a id="sleep" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>sleep</span><a href="#sleep" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
-<ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="sleep.sleep-1"><span class="tsd-kind-call-signature">sleep</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">ms</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><a href="#sleep.sleep-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5><span class="tsd-kind-parameter">ms</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in webserial.ts:487</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:439</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="slipWriter" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>slip<wbr/>Writer</span><a href="#slipWriter" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -499,7 +474,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:162</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:163</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="trace" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>trace</span><a href="#trace" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -518,7 +493,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:112</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:113</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="updateDevice" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update<wbr/>Device</span><a href="#updateDevice" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -537,7 +512,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:84</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:85</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="waitForUnlock" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>wait<wbr/>For<wbr/>Unlock</span><a href="#waitForUnlock" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -556,7 +531,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:495</li></ul></aside></li></ul></section>
+<li>Defined in webserial.ts:488</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="write" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>write</span><a href="#write" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -575,7 +550,7 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type ">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
-<li>Defined in webserial.ts:182</li></ul></aside></li></ul></section></section></div>
+<li>Defined in webserial.ts:183</li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -621,10 +596,10 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <li><a href="#hexConvert" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>hex<wbr/>Convert</span></a></li>
 <li><a href="#hexify" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>hexify</span></a></li>
 <li><a href="#inWaiting" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>in<wbr/>Waiting</span></a></li>
-<li><a href="#newRead" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>new<wbr/>Read</span></a></li>
+<li><a href="#peek" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>peek</span></a></li>
 <li><a href="#rawRead" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>raw<wbr/>Read</span></a></li>
 <li><a href="#read" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read</span></a></li>
-<li><a href="#readLoop" class="tsd-is-private"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read<wbr/>Loop</span></a></li>
+<li><a href="#readLoop" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>read<wbr/>Loop</span></a></li>
 <li><a href="#returnTrace" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>return<wbr/>Trace</span></a></li>
 <li><a href="#setDTR" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>setDTR</span></a></li>
 <li>
@@ -635,7 +610,6 @@ replacing the escape sequence. Reads at least 8 bytes.</p>
 <li>
 <ul>
 <li><a href="#md:true-for-enlow-chip-in-reset-and-false-enhigh-chip-out-of-reset"><span>True for EN=LOW, chip in reset and <wbr/>False EN=HIGH, chip out of reset</span></a></li></ul></li>
-<li><a href="#sleep" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>sleep</span></a></li>
 <li><a href="#slipWriter" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>slip<wbr/>Writer</span></a></li>
 <li><a href="#trace" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>trace</span></a></li>
 <li><a href="#updateDevice" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>update<wbr/>Device</span></a></li>
