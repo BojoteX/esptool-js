@@ -8671,6 +8671,15 @@ const $382e02c9bbd5d50b$var$portFilters = [
         usbVendorId: 0x303a
     },
     {
+        usbVendorId: 0x10c4
+    },
+    {
+        usbVendorId: 0x1a86
+    },
+    {
+        usbVendorId: 0x0403
+    },
+    {
         usbVendorId: 0xcafe
     }
 ];
@@ -8962,4 +8971,4 @@ $382e02c9bbd5d50b$var$consoleStopButton.onclick = async ()=>{
 };
 
 
-//# sourceMappingURL=typescript.bf456bc3.js.map
+//# sourceMappingURL=typescript.74544c3e.js.map

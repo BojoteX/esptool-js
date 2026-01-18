@@ -62,7 +62,10 @@ const serialLib = !navigator.serial && navigator.usb ? serial : navigator.serial
 
 // USB port filters - only show ESP32 and CockpitOS devices
 const portFilters = [
-  { usbVendorId: 0x303a },  // Espressif (ESP32-S2, S3, C3, C6 native USB)
+  { usbVendorId: 0x303a },  // Espressif native USB (ESP32-S2, S3, C3, C6)
+  { usbVendorId: 0x10c4 },  // Silicon Labs CP210x (ESP32 Classic)
+  { usbVendorId: 0x1a86 },  // WCH CH340/CH341 (ESP32 Classic)
+  { usbVendorId: 0x0403 },  // FTDI FT232 (ESP32 Classic)
   { usbVendorId: 0xcafe },  // CockpitOS custom devices
 ];
 
