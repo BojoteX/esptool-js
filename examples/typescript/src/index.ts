@@ -60,6 +60,12 @@ import { serial } from "web-serial-polyfill";
 
 const serialLib = !navigator.serial && navigator.usb ? serial : navigator.serial;
 
+// USB port filters - only show ESP32 and CockpitOS devices
+const portFilters = [
+  { usbVendorId: 0x303a },  // Espressif (ESP32-S2, S3, C3, C6 native USB)
+  { usbVendorId: 0xcafe },  // CockpitOS custom devices
+];
+
 declare let Terminal; // Terminal is imported in HTML script
 declare let CryptoJS; // CryptoJS is imported in HTML script
 
@@ -144,7 +150,7 @@ connectButton.onclick = async () => {
 
   try {
     if (device === null) {
-      device = await serialLib.requestPort({});
+      device = await serialLib.requestPort({ filters: portFilters });
       deviceInfo = device.getInfo();
       transport = new Transport(device, true);
     }
@@ -306,7 +312,7 @@ const sleep = async (ms: number) => {
 
 consoleStartButton.onclick = async () => {
   if (device === null) {
-    device = await serialLib.requestPort({});
+    device = await serialLib.requestPort({ filters: portFilters });
     transport = new Transport(device, true);
     deviceInfo = device.getInfo();
 
